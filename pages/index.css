@@ -15,3 +15,14 @@
 @import url(../blocks/profile/__edit-image/profile__edit-image.css);
 @import url(../blocks/profile/__info/profile__info.css);
 @import url(../blocks/profile/__name/profile__name.css);
+
+@import url(../blocks/elements/elements.css);
+
+@import url(../blocks/element/element.css);
+@import url(../blocks/element/__image/element__image.css);
+@import url(../blocks/element/__info/element__info.css);
+@import url(../blocks/element/__like-btn/element__like-btn.css);
+@import url(../blocks/element/__like-btn/__img/element__like-btn__img.css);
+@import url(../blocks/element/__like-btn/__img/_type/element__like-btn__img_type_active.css);
+@import url(../blocks/element/__like-btn/__img/_type/element__like-btn__img_type_disabled.css);
+@import url(../blocks/element/__title/element__title.css);
