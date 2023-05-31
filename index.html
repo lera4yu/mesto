@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./pages/index.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mesto</title>
+  <meta name="description" content="Интерактивная страница с фотографиями мест для путешествий">
+  <meta name="keywords" content="Путешестия, фотографии">
+  <meta name="author" content="Валерия Юдина">
+</head>
+
+<body class="root">
+  <header class="header">
+    <div class="header__logo"></div>
+    <div class="header__line"></div>
+  </header>
+
+  <main>
+    <section class="profile">
+      <img class="profile__avatar" src='./images/profile-image.jpg' alt="Жак-Ив Кусто в красной шапке">
+      <div class="profile__info">
+        <h1 class="profile__name">Жак-Ив Кусто</h1>
+        <button class="profile__edit-btn">
+          <div class="profile__edit-image"></div>
+        </button>
+        <p class="profile__caption">Исследователь океана</p>
+      </div>
+      <button class="profile__add-btn">
+        <div class="profile__add-image"></div>
+      </button>
+    </section>
+    <section class="elements">
+      <div class="element">
+        <img class="element__image" src="./images/karachaevsk-element.jpg" alt="Карачаевский монастырь в горах">
+        <div class="element__info">
+          <h2 class="element__title">Карачаевск</h2>
+          <button class="element__like-btn">
+            <div class=" element__like-btn__img element__like-btn__img_type_disabled"></div>
+          </button>
+        </div>
+      </div>
+      <div class="element">
+        <img class="element__image" src="./images/elbrus-element.jpg" alt="Гора Эльбрус на закате">
+        <div class="element__info">
+          <h2 class="element__title">Гора Эльбрус</h2>
+          <button class="element__like-btn">
+            <div class="element__like-btn__img element__like-btn__img_type_disabled"></div>
+          </button>
+        </div>
+      </div>
+      <div class="element">
+        <img class="element__image" src="./images/dombay-element.jpg" alt="Горный хребет Домбай в снегах">
+        <div class="element__info">
+          <h2 class="element__title">Домбай</h2>
+          <button class="element__like-btn">
+            <div class=" element__like-btn__img element__like-btn__img_type_disabled"></div>
+          </button>
+        </div>
+      </div>
+      <div class="element">
+        <img class="element__image" src="./images/elbrus-element.jpg" alt="Гора Эльбрус на закате">
+        <div class="element__info">
+          <h2 class="element__title">Гора Эльбрус</h2>
+          <button class="element__like-btn">
+            <div class=" element__like-btn__img element__like-btn__img_type_disabled"></div>
+          </button>
+        </div>
+      </div>
+      <div class="element">
+        <img class="element__image" src="./images/dombay-element.jpg" alt="Горный хребет Домбай в снегах">
+        <div class="element__info">
+          <h2 class="element__title">Домбай</h2>
+          <button class="element__like-btn">
+            <div class=" element__like-btn__img element__like-btn__img_type_disabled"></div>
+          </button>
+        </div>
+      </div>
+      <div class="element">
+        <img class="element__image" src="./images/karachaevsk-element.jpg" alt="Карачаевский монастырь в горах">
+        <div class="element__info">
+          <h2 class="element__title">Карачаево-Черкессия</h2>
+          <button class="element__like-btn">
+            <div class=" element__like-btn__img element__like-btn__img_type_disabled"></div>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <p class="footer__copyright">&copy; 2023 Mesto Russia</p>
+  </footer>
+  <div class="popup">
+    <form class="popup__container">
+      <h2 class="popup__title">Редактировать профиль</h2>
+        <input type="text" placeholder="Имя" class="popup__text popup__text_type_name">
+        <input type="text" placeholder="О вас" class="popup__text popup__text_type_caption">
+        <button class="popup__submit-btn">
+          <p class="popup__submit-btn-title">Сохранить</p>
+        </button>
+      <button class="popup__close-btn">
+        <div class="popup__close-btn-icon"></div>
+      </button>
+    </form>
+  </div>
+  <script src = "./scripts/script.js"></script>
+</body>
+
+</html>
