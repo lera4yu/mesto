@@ -1,0 +1,16 @@
+.popup__close-btn-icon {
+  background-image: url(../../../images/popup-close-icon.png);
+  width: 32px;
+  height: 32px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+@media screen and (max-width: 638px) {
+
+  .popup__close-btn-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+}
