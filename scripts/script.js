@@ -10,17 +10,17 @@ let popupSubmit = popupContainer.querySelector(".popup__submit-btn");
 let profileNameInput = popupContainer.querySelector('.popup__text_type_name');
 let profileCaptionInput = popupContainer.querySelector('.popup__text_type_caption');
 
-let likeButtons = document.querySelectorAll(".element__like-btn");
+let likeButtons = document.querySelectorAll(".like-btn");
 
 for (i = 0; i < likeButtons.length; i += 1) {
   let item = likeButtons[i];
   function changeLike(evt) {
     evt.preventDefault();
-    likeButtonImage.classList.toggle('element__like-btn__img_type_active');
-    likeButtonImage.classList.toggle('element__like-btn__img_type_disabled');
+    likeButtonImage.classList.toggle('like-btn__img_type_active');
+    likeButtonImage.classList.toggle('like-btn__img_type_disabled');
   }
 
-  let likeButtonImage = item.querySelector(".element__like-btn__img");
+  let likeButtonImage = item.querySelector(".like-btn__img");
   item.addEventListener("click", changeLike);
 }
 
