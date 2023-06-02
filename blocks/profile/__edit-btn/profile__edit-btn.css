@@ -11,8 +11,19 @@
   justify-content: center;
   align-self: center;
   transition: opacity 0.6s;
+  background-image: url(../../../images/profile-edit.svg);
+  background-size: 10px 10px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .profile__edit-btn:hover {
   opacity: 0.6;
+}
+
+@media screen and (max-width: 638px) {
+  .profile__edit-btn {
+    width: 18px;
+    height: 18px;
+  }
 }

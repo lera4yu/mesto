@@ -11,17 +11,22 @@
   border: 2px solid #FFFFFF;
   border-radius: 2px;
   transition: opacity 0.6s;
+  background-image: url(../../../images/profile-add.svg);
+  background-size: 22px 22px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .profile__add-btn:hover {
   opacity: 0.6;
 }
 
-@media screen and (max-width: 730px) {
+@media screen and (max-width: 750px) {
 
   .profile__add-btn {
     width: 100%;
     margin: 36px auto 0 auto;
+    background-size: 16px 16px;
   }
   
 }

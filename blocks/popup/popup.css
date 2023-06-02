@@ -6,16 +6,5 @@
   width: 100%;
   display: none;
   justify-content: center;
-}
-
-.popup::before {
-  background: #000000;
-  opacity: 0.5;
-  content: "";
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
