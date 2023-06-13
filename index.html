@@ -33,6 +33,7 @@
           <h2 class="element__title">Карачаевск</h2>
           <button class="element__like-btn" type="button"></button>
         </div>
+        <button class="element__trash-btn" type="button"></button>
       </article>
       <article class="element">
         <img class="element__image" src="./images/elbrus-element.jpg" alt="Гора Эльбрус на закате">
@@ -40,6 +41,7 @@
           <h2 class="element__title">Гора Эльбрус</h2>
           <button class="element__like-btn" type="button"></button>
         </div>
+        <button class="element__trash-btn" type="button"></button>
       </article>
       <article class="element">
         <img class="element__image" src="./images/dombay-element.jpg" alt="Горный хребет Домбай в снегах">
@@ -47,6 +49,7 @@
           <h2 class="element__title">Домбай</h2>
           <button class="element__like-btn" type="button"></button>
         </div>
+        <button class="element__trash-btn" type="button"></button>
       </article>
       <article class="element">
         <img class="element__image" src="./images/elbrus-element.jpg" alt="Гора Эльбрус на закате">
@@ -54,6 +57,7 @@
           <h2 class="element__title">Гора Эльбрус</h2>
           <button class="element__like-btn" type="button"></button>
         </div>
+        <button class="element__trash-btn" type="button"></button>
       </article>
       <article class="element">
         <img class="element__image" src="./images/dombay-element.jpg" alt="Горный хребет Домбай в снегах">
@@ -61,6 +65,7 @@
           <h2 class="element__title">Домбай</h2>
           <button class="element__like-btn" type="button"></button>
         </div>
+        <button class="element__trash-btn" type="button"></button>
       </article>
       <article class="element">
         <img class="element__image" src="./images/karachaevsk-element.jpg" alt="Карачаевский монастырь в горах">
@@ -68,6 +73,7 @@
           <h2 class="element__title">Карачаево-Черкессия</h2>
           <button class="element__like-btn" type="button"></button>
         </div>
+        <button class="element__trash-btn" type="button"></button>
       </article>
     </section>
   </main>
@@ -76,7 +82,7 @@
   </footer>
   <div class="popup">
     <div class="popup__container">
-      <form class="popup__form" name = "formPopup">
+      <form class="popup__form" name="formPopup">
         <h2 class="popup__title">Редактировать профиль</h2>
         <input type="text" placeholder="Имя" class="popup__text popup__text_type_name" name="namePopup">
         <input type="text" placeholder="О вас" class="popup__text popup__text_type_caption" name="captionPopup">
@@ -85,6 +91,34 @@
       <button class="popup__close-btn" type="button"></button>
     </div>
   </div>
+  <div class="popup-card">
+    <div class="popup__container">
+      <form class="popup__form" name="formPopup">
+        <h2 class="popup__title">Новое место</h2>
+        <input type="text" placeholder="Название" class="popup__text popup__text_type_title-card" name="titlePopup">
+        <input type="text" placeholder="Ссылка на картинку" class="popup__text popup__text_type_link-card"
+          name="linkPopup">
+        <button type="submit" class="popup__submit-btn">Создать</button>
+      </form>
+      <button class="popup__close-btn" type="button"></button>
+    </div>
+  </div>
+  <div class="popup-img">
+    <div class="popup-img__container">
+      <img class="popup-img__image" src="" alt="">
+      <h2 class="popup-img__title"></h2>
+      <button class="popup__close-btn" type="button"></button>
+    </div>
+  </div>
+  <template id="element-template">
+    <article class="element">
+      <img class="element__image" src="" alt="">
+      <div class="element__info">
+        <h2 class="element__title"></h2>
+        <button class="element__like-btn" type="button"></button>
+      </div>
+      <button class="element__trash-btn" type="button"></button>
+  </template>
   <script src="./scripts/index.js"></script>
 </body>
 
