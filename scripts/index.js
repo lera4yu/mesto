@@ -36,7 +36,7 @@ const profileNameInput = popupContainer.querySelector('.popup__text_type_name');
 const profileCaptionInput = popupContainer.querySelector('.popup__text_type_caption');
 const popupForm = popupContainer.querySelector('.popup__form');
 
-const popupCard = document.querySelector('.popup__card');
+const popupCard = document.querySelector('#popup-card');
 const elementTitleInput = popupCard.querySelector('.popup__text_type_title-card');
 const elementLinkInput = popupCard.querySelector('.popup__text_type_link-card');
 const popupCardForm = popupCard.querySelector('.popup__form');
