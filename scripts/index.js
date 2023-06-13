@@ -42,7 +42,7 @@ const elementLinkInput = popupCard.querySelector('.popup__text_type_link-card');
 const popupCardForm = popupCard.querySelector('.popup__form');
 const popupCardCloseButton = popupCard.querySelector('.popup__close-btn');
 const profileAddButton = profile.querySelector('.profile__add-btn');
-const popupImage = document.querySelector('.popup__image');
+const popupImage = document.querySelector('#popup-image');
 const popupImageCloseButton = popupImage.querySelector('.popup__close-btn');
 
 const elementsBody = document.querySelector('.elements');
