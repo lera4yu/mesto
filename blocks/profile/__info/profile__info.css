@@ -6,11 +6,15 @@
   grid-template-columns: repeat(2, minmax(min-content, max-content));
 }
 
-@media screen and (max-width: 730px) {
+@media screen and (max-width: 750px) {
 
   .profile__info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     margin-top: 26px;
-    gap: 10px 14px;
+    gap: 6px 10px;
   }
 
 }
