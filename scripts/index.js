@@ -27,34 +27,29 @@ const initialCards = [
 
 const profile = document.querySelector('.profile');
 const profileEditButton = profile.querySelector('.profile__edit-btn');
-const popup = document.querySelector('.popup');
-const popupContainer = popup.querySelector('.popup__container');
-const popupCloseButton = popupContainer.querySelector('.popup__close-btn');
+const profileAddButton = profile.querySelector('.profile__add-btn');
+const popupProfile = document.querySelector('#popup-profile');
+const popupProfileCloseButton = popupProfile.querySelector('.popup__close-btn');
 const profileName = profile.querySelector('.profile__name');
 const profileCaption = profile.querySelector('.profile__caption');
-const profileNameInput = popupContainer.querySelector('.popup__text_type_name');
-const profileCaptionInput = popupContainer.querySelector('.popup__text_type_caption');
-const popupForm = popupContainer.querySelector('.popup__form');
+const profileNameInput = popupProfile.querySelector('.popup__text_type_name');
+const profileCaptionInput = popupProfile.querySelector('.popup__text_type_caption');
+const popupProfileForm = popupProfile.querySelector('.popup__form');
 
 const popupCard = document.querySelector('#popup-card');
-const elementTitleInput = popupCard.querySelector('.popup__text_type_title-card');
-const elementLinkInput = popupCard.querySelector('.popup__text_type_link-card');
+const cardTitleInput = popupCard.querySelector('.popup__text_type_title-card');
+const cardLinkInput = popupCard.querySelector('.popup__text_type_link-card');
 const popupCardForm = popupCard.querySelector('.popup__form');
 const popupCardCloseButton = popupCard.querySelector('.popup__close-btn');
-const profileAddButton = profile.querySelector('.profile__add-btn');
+
 const popupImage = document.querySelector('#popup-image');
 const popupImageCloseButton = popupImage.querySelector('.popup__close-btn');
+// получаем переменные внутри попапа для дальнейшей записи в них значений из элемента
+const popImg = popupImage.querySelector('.popup__image-element');
+const popTitle = popupImage.querySelector('.popup__image-title');
 
 const elementsBody = document.querySelector('.elements');
 const template = document.querySelector('#element-template');
-
-// массив кнопок лайков, которые уже есть в html
-let likeButtons = document.querySelectorAll('.element__like-btn');
-
-// массив кнопок удаления, которые уже есть в html
-let deleteButtons = document.querySelectorAll('.element__trash-btn');
-
-let elementImages = document.querySelectorAll('.element__image');
 
 // функция лайка, принимает на вход переменную кнопки, так как лайков на странице несколько
 function changeLike(item) {
@@ -63,37 +58,48 @@ function changeLike(item) {
   });
 }
 
-//функция удаления карточки, принимает на вход переменную кнопки, так как кнопок удаления несколько
+//функция открытия попапа изображения
+function openPopupImg(image) {
+  openPopup(popupImage);
 
+  // записываем значения из элемента в свойства popup-элементов
+  popImg.src = image.src;
+  popImg.alt = image.alt;
+  popTitle.textContent = image.closest('.element').querySelector('.element__title').textContent;
+}
+
+//функция удаления карточки, принимает на вход переменную кнопки, так как кнопок удаления несколько
 function removeCard(deleteButton) {
   deleteButton.addEventListener('click', function() {
-    let CardRemove = this.parentElement;
-    CardRemove.remove();
+    const cardRemove = this.closest('.element');
+    cardRemove.remove();
   });
 }
 
-//функция добавления дефолтных карточек через js
-initialCards.forEach((card) => addCard(card.name, card.link));
-
-function addCard(name, link) {
+// функция создания карточки
+function createCard(name, link) {
   const cloneElement = template.content.cloneNode(true);
-  const elementTitle = cloneElement.querySelector('h2');
-  const elementImage = cloneElement.querySelector('img');
+  const elementTitle = cloneElement.querySelector('.element__title');
+  const elementImage = cloneElement.querySelector('.element__image');
   const likeButton = cloneElement.querySelector('.element__like-btn');
   const deleteButton = cloneElement.querySelector('.element__trash-btn');
 
   elementTitle.textContent = name;
   elementImage.src = link;
   elementImage.alt = name;
-  elementsBody.prepend(cloneElement);
+
   // навешивание функции лайка на новый добавленный элемент
   changeLike(likeButton);
   // навешивание функции удаления на новый добавленный элемент
   removeCard(deleteButton);
   //навешивание функции открытия попапа для изображения
   elementImage.addEventListener('click', () => openPopupImg(elementImage));
+
+  return cloneElement;
 }
 
+//добавление дефолтных карточек через js
+initialCards.forEach((card) => elementsBody.append(createCard(card.name, card.link)));
 
 // функция открытия формы
 function openPopup(popupElement) {
@@ -107,7 +113,7 @@ function addInfo(evt) {
   profileName.textContent = profileNameInput.value;
   profileCaption.textContent = profileCaptionInput.value;
 
-  closePopup();
+  closePopup(popupProfile);
 }
 
 // функция закрытия формы
@@ -115,61 +121,32 @@ function closePopup(popupElement) {
   popupElement.classList.remove('popup_opened');
 }
 
-//функция добавления инпутных значений картинок
-function addInfo(evt) {
-  evt.preventDefault();
-
-  profileName.textContent = profileNameInput.value;
-  profileCaption.textContent = profileCaptionInput.value;
-
-  closePopup(popup);
-}
-
 // функция открытия попапа профиля
 function openPopupProfile() {
-  openPopup(popup);
+  openPopup(popupProfile);
   profileNameInput.value = profileName.textContent;
   profileCaptionInput.value = profileCaption.textContent;
 }
 
-//функция открытия попапа изображения
-function openPopupImg(image) {
-  openPopup(popupImage);
-  // получаем переменные внутри попапа для дальнейшей записи в них значений из элемента
-  let popImg = popupImage.querySelector('img');
-  let popTitle = popupImage.querySelector('h2');
-
-  // записываем значения из элемента в свойства этих переменных
-  popImg.src = image.src;
-  popImg.alt = image.alt;
-  popTitle.textContent = image.parentElement.querySelector('h2').textContent;
-}
-
 // функция добавления карточки и отправки формы попапа карточки
-function addCardSubmit(evt) {
+function submitPopupCard(evt) {
   evt.preventDefault();
-
-  addCard(elementTitleInput.value, elementLinkInput.value);
+  elementsBody.prepend(createCard(cardTitleInput.value, cardLinkInput.value));
   closePopup(popupCard);
-  elementTitleInput.value = '';
-  elementLinkInput.value = '';
+
+  //очищаем форму
+  evt.target.reset();
 }
 
-popupForm.addEventListener('submit', addInfo);
+//открытие попапов
 profileEditButton.addEventListener('click', openPopupProfile);
 profileAddButton.addEventListener('click', () => openPopup(popupCard));
-popupCloseButton.addEventListener('click', () => closePopup(popup));
-popupCardCloseButton.addEventListener('click', () => closePopup(popupCard));
-popupCardForm.addEventListener('submit', addCardSubmit);
 
-//перебор кнопок удаления и навешивание на них функции удаления
-deleteButtons.forEach((deleteButton) => removeCard(deleteButton));
-
-// перебор лайков и навешивание на них функции лайка
-likeButtons.forEach((likeButton) => changeLike(likeButton));
-
-// перебор изображений в элементах и навешивание на них функции открытия попапа изображения
-elementImages.forEach((image) => image.addEventListener('click', () => openPopupImg(image)));
-
-//функция для закрытия попапа изображения
+//закрытие попапов
+popupProfileCloseButton.addEventListener('click', () => closePopup(popupProfile));
 popupImageCloseButton.addEventListener('click', () => closePopup(popupImage));
+popupCardCloseButton.addEventListener('click', () => closePopup(popupCard));
+
+//отправка форм
+popupCardForm.addEventListener('submit', submitPopupCard);
+popupProfileForm.addEventListener('submit', addInfo);
