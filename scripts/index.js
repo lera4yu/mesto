@@ -66,9 +66,9 @@ function changeLike(item) {
 //функция удаления карточки, принимает на вход переменную кнопки, так как кнопок удаления несколько
 
 function removeCard(deleteButton) {
-  deleteButton.addEventListener('click', function() {
-    let CardRemove = this.parentElement;
-    CardRemove.remove();
+  deleteButton.addEventListener('click', function () {
+    const cardRemove = this.closest('.element');
+    cardRemove.remove();
   });
 }
 
@@ -92,12 +92,47 @@ function addCard(name, link) {
   removeCard(deleteButton);
   //навешивание функции открытия попапа для изображения
   elementImage.addEventListener('click', () => openPopupImg(elementImage));
+
+  return cloneElement;
 }
 
+//добавление дефолтных карточек через js
+initialCards.forEach((card) => elementsBody.append(createCard(card.name, card.link)));
+
+//добавление слушателя на esc
+function addEscListener(popupElement) {
+  function onEscape({ key }) {
+    if (key === 'Escape') {
+      closePopup(popupElement);
+      window.removeEventListener('keyup', onEscape);
+    }
+  }
+  window.addEventListener('keyup', onEscape);
+}
+
+//добавления слушателя на оверлей
+function addOverlayClickListener(popupElement) {
+  function onOverlayClick(evt) {
+    if (evt.target == popupElement) {
+      closePopup(popupElement);
+      popupElement.removeEventListener('click', onOverlayClick);
+    }
+  }
+  popupElement.addEventListener('click', onOverlayClick);
+}
 
 // функция открытия формы
 function openPopup(popupElement) {
   popupElement.classList.add('popup_opened');
+  addEscListener(popupElement);
+  addOverlayClickListener(popupElement);
+
+  //принудительный toggle после сета значений
+  const formElement = popupElement.querySelector(config.formSelector);
+  if (formElement) {
+    const submitButtonElement = formElement.querySelector(config.submitButtonSelector);
+    toggleButtonState(submitButtonElement, formElement.checkValidity(), config);
+  }
 }
 
 // функция добавления введенной информации на страницу
@@ -127,22 +162,9 @@ function addInfo(evt) {
 
 // функция открытия попапа профиля
 function openPopupProfile() {
-  openPopup(popup);
   profileNameInput.value = profileName.textContent;
   profileCaptionInput.value = profileCaption.textContent;
-}
-
-//функция открытия попапа изображения
-function openPopupImg(image) {
-  openPopup(popupImage);
-  // получаем переменные внутри попапа для дальнейшей записи в них значений из элемента
-  let popImg = popupImage.querySelector('img');
-  let popTitle = popupImage.querySelector('h2');
-
-  // записываем значения из элемента в свойства этих переменных
-  popImg.src = image.src;
-  popImg.alt = image.alt;
-  popTitle.textContent = image.parentElement.querySelector('h2').textContent;
+  openPopup(popupProfile);
 }
 
 // функция добавления карточки и отправки формы попапа карточки
@@ -173,5 +195,4 @@ elementImages.forEach((image) => image.addEventListener('click', () => openPopup
 
 //функция для закрытия попапа изображения
 popupImageCloseButton.addEventListener('click', () => closePopup(popupImage));
-
-
+popupCardCloseButton.addEventListener('click', () => closePopup(popupCard));
