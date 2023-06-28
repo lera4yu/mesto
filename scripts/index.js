@@ -70,7 +70,7 @@ function openPopupImg(image) {
 
 //функция удаления карточки, принимает на вход переменную кнопки, так как кнопок удаления несколько
 function removeCard(deleteButton) {
-  deleteButton.addEventListener('click', function() {
+  deleteButton.addEventListener('click', function () {
     const cardRemove = this.closest('.element');
     cardRemove.remove();
   });
@@ -101,9 +101,40 @@ function createCard(name, link) {
 //добавление дефолтных карточек через js
 initialCards.forEach((card) => elementsBody.append(createCard(card.name, card.link)));
 
+//добавление слушателя на esc
+function addEscListener(popupElement) {
+  function onEscape({ key }) {
+    if (key === 'Escape') {
+      closePopup(popupElement);
+      window.removeEventListener('keyup', onEscape);
+    }
+  }
+  window.addEventListener('keyup', onEscape);
+}
+
+//добавления слушателя на оверлей
+function addOverlayClickListener(popupElement) {
+  function onOverlayClick(evt) {
+    if (evt.target == popupElement) {
+      closePopup(popupElement);
+      popupElement.removeEventListener('click', onOverlayClick);
+    }
+  }
+  popupElement.addEventListener('click', onOverlayClick);
+}
+
 // функция открытия формы
 function openPopup(popupElement) {
   popupElement.classList.add('popup_opened');
+  addEscListener(popupElement);
+  addOverlayClickListener(popupElement);
+
+  //принудительный toggle после сета значений
+  const formElement = popupElement.querySelector(config.formSelector);
+  if (formElement) {
+    const submitButtonElement = formElement.querySelector(config.submitButtonSelector);
+    toggleButtonState(submitButtonElement, formElement.checkValidity(), config);
+  }
 }
 
 // функция добавления введенной информации на страницу
@@ -123,9 +154,9 @@ function closePopup(popupElement) {
 
 // функция открытия попапа профиля
 function openPopupProfile() {
-  openPopup(popupProfile);
   profileNameInput.value = profileName.textContent;
   profileCaptionInput.value = profileCaption.textContent;
+  openPopup(popupProfile);
 }
 
 // функция добавления карточки и отправки формы попапа карточки
@@ -146,7 +177,3 @@ profileAddButton.addEventListener('click', () => openPopup(popupCard));
 popupProfileCloseButton.addEventListener('click', () => closePopup(popupProfile));
 popupImageCloseButton.addEventListener('click', () => closePopup(popupImage));
 popupCardCloseButton.addEventListener('click', () => closePopup(popupCard));
-
-//отправка форм
-popupCardForm.addEventListener('submit', submitPopupCard);
-popupProfileForm.addEventListener('submit', addInfo);

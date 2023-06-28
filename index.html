@@ -37,9 +37,13 @@
     <div class="popup__container">
       <form class="popup__form" name="formPopup">
         <h2 class="popup__title">Редактировать профиль</h2>
-        <input type="text" placeholder="Имя" class="popup__text popup__text_type_name" name="namePopup">
-        <input type="text" placeholder="О вас" class="popup__text popup__text_type_caption" name="captionPopup">
-        <button type="submit" class="popup__submit-btn">Сохранить</button>
+        <input minlength="2" maxlength="40" type="text" placeholder="Имя" class="popup__text popup__text_type_name"
+          name="namePopup" required>
+        <span class="popup__error" id="namePopup-error"></span>
+        <input minlength="2" maxlength="200" type="text" placeholder="О вас"
+          class="popup__text popup__text_type_caption" name="captionPopup" required>
+        <span class="popup__error" id="captionPopup-error"></span>
+        <button type="submit" class="popup__submit-btn btnPopup-profile">Сохранить</button>
       </form>
       <button class="popup__close-btn" type="button"></button>
     </div>
@@ -48,10 +52,13 @@
     <div class="popup__container">
       <form class="popup__form" name="formPopup">
         <h2 class="popup__title">Новое место</h2>
-        <input type="text" placeholder="Название" class="popup__text popup__text_type_title-card" name="titlePopup">
-        <input type="text" placeholder="Ссылка на картинку" class="popup__text popup__text_type_link-card"
-          name="linkPopup">
-        <button type="submit" class="popup__submit-btn">Создать</button>
+        <input minlength="2" maxlength="30" type="text" placeholder="Название"
+          class="popup__text popup__text_type_title-card" name="titlePopup" required>
+        <span class="popup__error" id="titlePopup-error"></span>
+        <input type="url" placeholder="Ссылка на картинку" class="popup__text popup__text_type_link-card"
+          name="linkPopup" required>
+        <span class="popup__error" id="linkPopup-error"></span>
+        <button type="submit" class="popup__submit-btn btnPopup-card">Создать</button>
       </form>
       <button class="popup__close-btn" type="button"></button>
     </div>
@@ -76,6 +83,7 @@
     </article>
   </template>
   <script src="./scripts/index.js"></script>
+  <script src="./scripts/validate.js"></script>
 </body>
 
 </html>
