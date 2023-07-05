@@ -39,7 +39,7 @@ function toggleButtonState(buttonElement, isActive, config) {
   }
 }
 
-function setEventListener(formElement, config, onSubmit) {
+function setEventListener(formElement, config) {
   const inputList = formElement.querySelectorAll(config.inputSelector);
   const submitButtonElement = formElement.querySelector(
     config.submitButtonSelector
@@ -51,22 +51,16 @@ function setEventListener(formElement, config, onSubmit) {
       chekInputValidity(inputElement, formElement, config);
     });
   });
-
-  formElement.addEventListener("submit", (evt) => {
-    evt.preventDefault();
-    if (!formElement.checkValidity()) return;
-    onSubmit(evt);
-  });
 }
 
 function enableValidation(config) {
-  const formProfile = document.querySelector('#popup-profile .popup__form');
-  const formCard = document.querySelector('#popup-card .popup__form');
+  const formsList = document.querySelectorAll(config.formSelector);
 
-  [[formProfile, addInfo], [formCard, submitPopupCard]].forEach(function ([formElement, onSubmit]) {
-    setEventListener(formElement, config, onSubmit);
+  [...formsList].forEach(function (formElement) {
+    setEventListener(formElement, config);
   });
 }
+
 
 const config = {
   formSelector: '.popup__form',

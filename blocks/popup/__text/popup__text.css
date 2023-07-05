@@ -30,7 +30,7 @@
     width: 238px;
   }
   .popup__text:last-of-type {
-    margin: 30px auto 45px auto;
+    margin: 30px auto 0 auto;
   }
 
 }

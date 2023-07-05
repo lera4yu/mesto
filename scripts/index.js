@@ -70,8 +70,8 @@ function openPopupImg(image) {
 
 //функция удаления карточки, принимает на вход переменную кнопки, так как кнопок удаления несколько
 function removeCard(deleteButton) {
-  deleteButton.addEventListener('click', function () {
-    const cardRemove = this.closest('.element');
+  deleteButton.addEventListener('click', function (evt) {
+    const cardRemove = evt.target.closest('.element');
     cardRemove.remove();
   });
 }
@@ -102,39 +102,27 @@ function createCard(name, link) {
 initialCards.forEach((card) => elementsBody.append(createCard(card.name, card.link)));
 
 //добавление слушателя на esc
-function addEscListener(popupElement) {
-  function onEscape({ key }) {
-    if (key === 'Escape') {
-      closePopup(popupElement);
-      window.removeEventListener('keyup', onEscape);
-    }
+
+function closeByEscape(evt) {
+  if (evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
   }
-  window.addEventListener('keyup', onEscape);
 }
 
 //добавления слушателя на оверлей
-function addOverlayClickListener(popupElement) {
-  function onOverlayClick(evt) {
-    if (evt.target == popupElement) {
-      closePopup(popupElement);
-      popupElement.removeEventListener('click', onOverlayClick);
-    }
+function closeByOverlayClick(evt) {
+  const openedPopup = document.querySelector('.popup_opened');
+  if (evt.target === openedPopup) {
+    closePopup(openedPopup);
   }
-  popupElement.addEventListener('click', onOverlayClick);
 }
 
 // функция открытия формы
 function openPopup(popupElement) {
   popupElement.classList.add('popup_opened');
-  addEscListener(popupElement);
-  addOverlayClickListener(popupElement);
-
-  //принудительный toggle после сета значений
-  const formElement = popupElement.querySelector(config.formSelector);
-  if (formElement) {
-    const submitButtonElement = formElement.querySelector(config.submitButtonSelector);
-    toggleButtonState(submitButtonElement, formElement.checkValidity(), config);
-  }
+  popupElement.addEventListener('click', closeByOverlayClick);
+  document.addEventListener('keydown', closeByEscape);
 }
 
 // функция добавления введенной информации на страницу
@@ -150,6 +138,8 @@ function addInfo(evt) {
 // функция закрытия формы
 function closePopup(popupElement) {
   popupElement.classList.remove('popup_opened');
+  document.removeEventListener('keydown', closeByEscape);
+  popupElement.removeEventListener('click', closeByOverlayClick);
 }
 
 // функция открытия попапа профиля
@@ -157,6 +147,12 @@ function openPopupProfile() {
   profileNameInput.value = profileName.textContent;
   profileCaptionInput.value = profileCaption.textContent;
   openPopup(popupProfile);
+
+  //принудительный toggle после сета значений
+  const formElement = popupProfile.querySelector(config.formSelector);
+  const submitButtonElement = formElement.querySelector(config.submitButtonSelector);
+  toggleButtonState(submitButtonElement, formElement.checkValidity(), config);
+
 }
 
 // функция добавления карточки и отправки формы попапа карточки
@@ -167,6 +163,11 @@ function submitPopupCard(evt) {
 
   //очищаем форму
   evt.target.reset();
+
+  //принудительный toggle
+  const formElement = popupCard.querySelector(config.formSelector);
+  const submitButtonElement = formElement.querySelector(config.submitButtonSelector);
+  toggleButtonState(submitButtonElement, formElement.checkValidity(), config);
 }
 
 //открытие попапов
@@ -177,3 +178,16 @@ profileAddButton.addEventListener('click', () => openPopup(popupCard));
 popupProfileCloseButton.addEventListener('click', () => closePopup(popupProfile));
 popupImageCloseButton.addEventListener('click', () => closePopup(popupImage));
 popupCardCloseButton.addEventListener('click', () => closePopup(popupCard));
+
+//отправка форм
+popupProfileForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  if (!popupProfileForm.checkValidity()) return;
+  addInfo(evt);
+});
+
+popupCardForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  if (!popupCardForm.checkValidity()) return;
+  submitPopupCard(evt);
+});
