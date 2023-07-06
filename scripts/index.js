@@ -41,6 +41,7 @@ const cardTitleInput = popupCard.querySelector('.popup__text_type_title-card');
 const cardLinkInput = popupCard.querySelector('.popup__text_type_link-card');
 const popupCardForm = popupCard.querySelector('.popup__form');
 const popupCardCloseButton = popupCard.querySelector('.popup__close-btn');
+const cardSubmitButton = popupCardForm.querySelector('.popup__submit-btn');
 
 const popupImage = document.querySelector('#popup-image');
 const popupImageCloseButton = popupImage.querySelector('.popup__close-btn');
@@ -112,9 +113,8 @@ function closeByEscape(evt) {
 
 //добавления слушателя на оверлей
 function closeByOverlayClick(evt) {
-  const openedPopup = document.querySelector('.popup_opened');
-  if (evt.target === openedPopup) {
-    closePopup(openedPopup);
+  if (evt.target === evt.currentTarget) {
+    closePopup(evt.currentTarget);
   }
 }
 
@@ -147,12 +147,6 @@ function openPopupProfile() {
   profileNameInput.value = profileName.textContent;
   profileCaptionInput.value = profileCaption.textContent;
   openPopup(popupProfile);
-
-  //принудительный toggle после сета значений
-  const formElement = popupProfile.querySelector(config.formSelector);
-  const submitButtonElement = formElement.querySelector(config.submitButtonSelector);
-  toggleButtonState(submitButtonElement, formElement.checkValidity(), config);
-
 }
 
 // функция добавления карточки и отправки формы попапа карточки
@@ -165,9 +159,7 @@ function submitPopupCard(evt) {
   evt.target.reset();
 
   //принудительный toggle
-  const formElement = popupCard.querySelector(config.formSelector);
-  const submitButtonElement = formElement.querySelector(config.submitButtonSelector);
-  toggleButtonState(submitButtonElement, formElement.checkValidity(), config);
+  toggleButtonState(cardSubmitButton, popupCardForm.checkValidity(), config);
 }
 
 //открытие попапов
@@ -180,14 +172,6 @@ popupImageCloseButton.addEventListener('click', () => closePopup(popupImage));
 popupCardCloseButton.addEventListener('click', () => closePopup(popupCard));
 
 //отправка форм
-popupProfileForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  if (!popupProfileForm.checkValidity()) return;
-  addInfo(evt);
-});
+popupProfileForm.addEventListener("submit", addInfo);
 
-popupCardForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  if (!popupCardForm.checkValidity()) return;
-  submitPopupCard(evt);
-});
+popupCardForm.addEventListener("submit", submitPopupCard);
