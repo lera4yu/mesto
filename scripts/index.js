@@ -1,3 +1,7 @@
+//импорты
+import {Card} from './Card.js';
+import { FormValidator } from './FormValidator.js';
+
 const initialCards = [
   {
     name: 'Архыз',
@@ -25,6 +29,14 @@ const initialCards = [
   }
 ];
 
+const configPopupValidation = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__text',
+  submitButtonSelector: '.popup__submit-btn',
+  inactiveButtonClass: 'popup__submit-btn_disabled',
+  inputErrorClass: 'popup__error_active'
+};
+
 const profile = document.querySelector('.profile');
 const profileEditButton = profile.querySelector('.profile__edit-btn');
 const profileAddButton = profile.querySelector('.profile__add-btn');
@@ -50,60 +62,15 @@ const popImg = popupImage.querySelector('.popup__image-element');
 const popTitle = popupImage.querySelector('.popup__image-title');
 
 const elementsBody = document.querySelector('.elements');
-const template = document.querySelector('#element-template');
-
-// функция лайка, принимает на вход переменную кнопки, так как лайков на странице несколько
-function changeLike(item) {
-  item.addEventListener('click', () => {
-    item.classList.toggle('element__like-btn_active');
-  });
-}
-
-//функция открытия попапа изображения
-function openPopupImg(image) {
-  openPopup(popupImage);
-
-  // записываем значения из элемента в свойства popup-элементов
-  popImg.src = image.src;
-  popImg.alt = image.alt;
-  popTitle.textContent = image.closest('.element').querySelector('.element__title').textContent;
-}
-
-//функция удаления карточки, принимает на вход переменную кнопки, так как кнопок удаления несколько
-function removeCard(deleteButton) {
-  deleteButton.addEventListener('click', function (evt) {
-    const cardRemove = evt.target.closest('.element');
-    cardRemove.remove();
-  });
-}
-
-// функция создания карточки
-function createCard(name, link) {
-  const cloneElement = template.content.cloneNode(true);
-  const elementTitle = cloneElement.querySelector('.element__title');
-  const elementImage = cloneElement.querySelector('.element__image');
-  const likeButton = cloneElement.querySelector('.element__like-btn');
-  const deleteButton = cloneElement.querySelector('.element__trash-btn');
-
-  elementTitle.textContent = name;
-  elementImage.src = link;
-  elementImage.alt = name;
-
-  // навешивание функции лайка на новый добавленный элемент
-  changeLike(likeButton);
-  // навешивание функции удаления на новый добавленный элемент
-  removeCard(deleteButton);
-  //навешивание функции открытия попапа для изображения
-  elementImage.addEventListener('click', () => openPopupImg(elementImage));
-
-  return cloneElement;
-}
 
 //добавление дефолтных карточек через js
-initialCards.forEach((card) => elementsBody.append(createCard(card.name, card.link)));
+initialCards.forEach((card) => {
+  const newCard = new Card(card, '#element-template');
+  const cardElement = newCard.createCard();
+  elementsBody.append(cardElement);
+});
 
 //добавление слушателя на esc
-
 function closeByEscape(evt) {
   if (evt.key === 'Escape') {
     const openedPopup = document.querySelector('.popup_opened');
@@ -152,14 +119,16 @@ function openPopupProfile() {
 // функция добавления карточки и отправки формы попапа карточки
 function submitPopupCard(evt) {
   evt.preventDefault();
-  elementsBody.prepend(createCard(cardTitleInput.value, cardLinkInput.value));
+  const newAddCard = new Card({name: cardTitleInput.value, link: cardLinkInput.value}, '#element-template');
+  const newAddCardElement = newAddCard.createCard();
+  elementsBody.prepend(newAddCardElement);
   closePopup(popupCard);
 
   //очищаем форму
   evt.target.reset();
 
   //принудительный toggle
-  toggleButtonState(cardSubmitButton, popupCardForm.checkValidity(), config);
+  cardValidateItem.toggleButtonState(cardSubmitButton, popupCardForm.checkValidity());
 }
 
 //открытие попапов
@@ -175,3 +144,13 @@ popupCardCloseButton.addEventListener('click', () => closePopup(popupCard));
 popupProfileForm.addEventListener("submit", addInfo);
 
 popupCardForm.addEventListener("submit", submitPopupCard);
+
+
+//валидация через класс
+const cardValidateItem = new FormValidator(configPopupValidation, popupCardForm);
+cardValidateItem.enableValidation();
+const profileValidateItem = new FormValidator(configPopupValidation, popupProfileForm);
+profileValidateItem.enableValidation();
+
+//экспорты
+export {openPopup, popupImage, popImg, popTitle};
