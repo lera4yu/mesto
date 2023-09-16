@@ -20,17 +20,14 @@
   color:#000000;
 }
 
-.popup__text:last-of-type {
-  margin: 13px auto 0 auto;
-}
-
 @media screen and (max-width: 638px) {
   
   .popup__text {
     width: 238px;
   }
-  .popup__text:last-of-type {
+  
+  /* .popup__text:last-of-type {
     margin: 30px auto 0 auto;
-  }
+  } */
 
 }

@@ -1,33 +1,8 @@
 //импорты
-import {Card} from './Card.js';
+import { Card } from './Card.js';
 import { FormValidator } from './FormValidator.js';
-
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
+import { popupImage, initialCards} from './utils/constants.js';
+import { openPopup, closePopup } from './utils/utils.js';
 
 const configPopupValidation = {
   formSelector: '.popup__form',
@@ -55,42 +30,23 @@ const popupCardForm = popupCard.querySelector('.popup__form');
 const popupCardCloseButton = popupCard.querySelector('.popup__close-btn');
 const cardSubmitButton = popupCardForm.querySelector('.popup__submit-btn');
 
-const popupImage = document.querySelector('#popup-image');
 const popupImageCloseButton = popupImage.querySelector('.popup__close-btn');
 // получаем переменные внутри попапа для дальнейшей записи в них значений из элемента
-const popImg = popupImage.querySelector('.popup__image-element');
-const popTitle = popupImage.querySelector('.popup__image-title');
 
 const elementsBody = document.querySelector('.elements');
 
+//функция создания элемента карточки из класса карточки по входным значениям
+
+function renderCard(nameCard, linkCard) {
+  const newAddCard = new Card({ name: nameCard, link: linkCard }, '#element-template');
+  const newAddCardElement = newAddCard.createCard();
+  return newAddCardElement
+}
+
 //добавление дефолтных карточек через js
 initialCards.forEach((card) => {
-  const newCard = new Card(card, '#element-template');
-  const cardElement = newCard.createCard();
-  elementsBody.append(cardElement);
+  elementsBody.append(renderCard(card.name, card.link));
 });
-
-//добавление слушателя на esc
-function closeByEscape(evt) {
-  if (evt.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup_opened');
-    closePopup(openedPopup);
-  }
-}
-
-//добавления слушателя на оверлей
-function closeByOverlayClick(evt) {
-  if (evt.target === evt.currentTarget) {
-    closePopup(evt.currentTarget);
-  }
-}
-
-// функция открытия формы
-function openPopup(popupElement) {
-  popupElement.classList.add('popup_opened');
-  popupElement.addEventListener('click', closeByOverlayClick);
-  document.addEventListener('keydown', closeByEscape);
-}
 
 // функция добавления введенной информации на страницу
 function addInfo(evt) {
@@ -100,13 +56,6 @@ function addInfo(evt) {
   profileCaption.textContent = profileCaptionInput.value;
 
   closePopup(popupProfile);
-}
-
-// функция закрытия формы
-function closePopup(popupElement) {
-  popupElement.classList.remove('popup_opened');
-  document.removeEventListener('keydown', closeByEscape);
-  popupElement.removeEventListener('click', closeByOverlayClick);
 }
 
 // функция открытия попапа профиля
@@ -119,9 +68,7 @@ function openPopupProfile() {
 // функция добавления карточки и отправки формы попапа карточки
 function submitPopupCard(evt) {
   evt.preventDefault();
-  const newAddCard = new Card({name: cardTitleInput.value, link: cardLinkInput.value}, '#element-template');
-  const newAddCardElement = newAddCard.createCard();
-  elementsBody.prepend(newAddCardElement);
+  elementsBody.prepend(renderCard(cardTitleInput.value, cardLinkInput.value));
   closePopup(popupCard);
 
   //очищаем форму
@@ -145,12 +92,8 @@ popupProfileForm.addEventListener("submit", addInfo);
 
 popupCardForm.addEventListener("submit", submitPopupCard);
 
-
 //валидация через класс
 const cardValidateItem = new FormValidator(configPopupValidation, popupCardForm);
 cardValidateItem.enableValidation();
 const profileValidateItem = new FormValidator(configPopupValidation, popupProfileForm);
 profileValidateItem.enableValidation();
-
-//экспорты
-export {openPopup, popupImage, popImg, popTitle};
