@@ -12,7 +12,6 @@ module.exports = {
   },
   mode: 'development',
   devServer: {
-    static: path.resolve(__dirname, './'),
     compress: true,
     port: 8080,
     open: true
