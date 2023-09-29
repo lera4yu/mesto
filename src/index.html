@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mesto</title>
+  <meta name="description" content="Интерактивная страница с фотографиями мест для путешествий">
+  <meta name="keywords" content="Путешестия, фотографии">
+  <meta name="author" content="Валерия Юдина">
+</head>
+
+<body class="root">
+  <header class="header">
+    <div class="header__logo"></div>
+  </header>
+
+  <main>
+    <section class="profile">
+      <img class="profile__avatar" src="<%=require('./images/profile-image.jpg')%>" alt="Жак-Ив Кусто в красной шапке">
+      <div class="profile__info">
+        <h1 class="profile__name">Жак-Ив Кусто</h1>
+        <button class="profile__edit-btn" type="button"></button>
+        <p class="profile__caption">Исследователь океана</p>
+      </div>
+      <button class="profile__add-btn" type="button"></button>
+    </section>
+    <section class="elements">
+
+    </section>
+  </main>
+  <footer class="footer">
+    <p class="footer__copyright">&copy; 2023 Mesto Russia</p>
+  </footer>
+  <div class="popup" id="popup-profile">
+    <div class="popup__container">
+      <form class="popup__form" name="formPopup">
+        <h2 class="popup__title">Редактировать профиль</h2>
+        <input minlength="2" maxlength="40" type="text" placeholder="Имя" class="popup__text popup__text_type_name"
+          name="namePopup" required>
+        <span class="popup__error" id="namePopup-error"></span>
+        <input minlength="2" maxlength="200" type="text" placeholder="О вас"
+          class="popup__text popup__text_type_caption" name="captionPopup" required>
+        <span class="popup__error" id="captionPopup-error"></span>
+        <button type="submit" class="popup__submit-btn popup__submit-btn_disabled btnPopup-profile">Сохранить</button>
+      </form>
+      <button class="popup__close-btn" type="button"></button>
+    </div>
+  </div>
+  <div class="popup" id="popup-card">
+    <div class="popup__container">
+      <form class="popup__form" name="formPopup">
+        <h2 class="popup__title">Новое место</h2>
+        <input minlength="2" maxlength="30" type="text" placeholder="Название"
+          class="popup__text popup__text_type_title-card" name="titlePopup" required>
+        <span class="popup__error" id="titlePopup-error"></span>
+        <input type="url" placeholder="Ссылка на картинку" class="popup__text popup__text_type_link-card"
+          name="linkPopup" required>
+        <span class="popup__error" id="linkPopup-error"></span>
+        <button type="submit" class="popup__submit-btn popup__submit-btn_disabled btnPopup-card">Создать</button>
+      </form>
+      <button class="popup__close-btn" type="button"></button>
+    </div>
+  </div>
+  <div class="popup" id="popup-image">
+    <div class="popup__image-container">
+      <img class="popup__image-element"
+        src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="Фотография">
+      <h2 class="popup__image-title"></h2>
+      <button class="popup__close-btn" type="button"></button>
+    </div>
+  </div>
+  <template id="element-template">
+    <article class="element">
+      <img class="element__image" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg"
+        alt="Фотография">
+      <div class="element__info">
+        <h2 class="element__title"></h2>
+        <button class="element__like-btn" type="button"></button>
+      </div>
+      <button class="element__trash-btn" type="button"></button>
+    </article>
+  </template>
+</body>
+
+</html>
