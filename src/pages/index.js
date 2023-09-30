@@ -1,14 +1,14 @@
 //импорты
-import { Card } from './Card.js';
-import { FormValidator } from './FormValidator.js';
-import { popupImage, initialCards } from './utils/constants.js';
-import { Section } from './Section.js';
+import { Card } from '../components/Card.js';
+import { FormValidator } from '../components/FormValidator.js';
+import { popupImage, initialCards } from '../utils/constants.js';
+import { Section } from '../components/Section.js';
 
-import { PopupWithForm } from './PopupWithForm.js';
-import { PopupWithImage } from './PopupWithImage.js';
+import { PopupWithForm } from '../components/PopupWithForm.js';
+import { PopupWithImage } from '../components/PopupWithImage.js';
 
 // index.js
-import './pages/index.css';
+import './index.css';
 
 const configPopupValidation = {
   formSelector: '.popup__form',
