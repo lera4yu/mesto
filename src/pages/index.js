@@ -24,16 +24,13 @@ const profileAddButton = profile.querySelector('.profile__add-btn');
 const popupProfile = document.querySelector('#popup-profile');
 const popupProfileName = popupProfile.querySelector('.popup__text_type_name');
 const popupProfileCaption = popupProfile.querySelector('.popup__text_type_caption');
-const popupProfileCloseButton = popupProfile.querySelector('.popup__close-btn');
 const profileName = profile.querySelector('.profile__name');
 const profileCaption = profile.querySelector('.profile__caption');
 const popupProfileForm = popupProfile.querySelector('.popup__form');
 
 const popupCard = document.querySelector('#popup-card');
+const cardSubmitButton = popupCard.querySelector('.popup__submit-btn');
 const popupCardForm = popupCard.querySelector('.popup__form');
-const popupCardCloseButton = popupCard.querySelector('.popup__close-btn');
-
-const popupImageCloseButton = popupImage.querySelector('.popup__close-btn');
 
 const popupImageItem = new PopupWithImage('#popup-image');
 
@@ -87,7 +84,11 @@ function submitPopupCard(obj) {
 
 const popupProfileItem = new PopupWithForm({ popupSelector: '#popup-profile', handleFormSubmit: addInfo });
 
-const popupCardItem = new PopupWithForm({ popupSelector: '#popup-card', handleFormSubmit: submitPopupCard })
+const popupCardItem = new PopupWithForm({
+  popupSelector: '#popup-card',
+  handleFormSubmit: submitPopupCard,
+  postCloseHandler: () => cardValidateItem.toggleButtonState(cardSubmitButton, popupCardForm.checkValidity())
+})
 
 //открытие попапов
 profileEditButton.addEventListener('click', () => {

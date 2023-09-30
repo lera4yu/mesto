@@ -9,9 +9,10 @@
 import Popup from './Popup.js';
 
 export class PopupWithForm extends Popup {
-  constructor({ popupSelector, handleFormSubmit }) {
+  constructor({ popupSelector, handleFormSubmit, postCloseHandler}) {
     super(popupSelector);
     this._handleFormSubmit = handleFormSubmit;
+    this._postCloseHandler = postCloseHandler;
     this._popupForm = this._popupElement.querySelector('.popup__form');
     this._popupInput = this._popupElement.querySelectorAll('.popup__text');
     this.setEventListeners();
@@ -35,6 +36,9 @@ export class PopupWithForm extends Popup {
 
   close() {
     this._popupForm.reset();
+    if (this._postCloseHandler) {
+      this._postCloseHandler();
+    }
     super.close();
   }
 }
