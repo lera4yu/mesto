@@ -22,6 +22,8 @@ const profile = document.querySelector('.profile');
 const profileEditButton = profile.querySelector('.profile__edit-btn');
 const profileAddButton = profile.querySelector('.profile__add-btn');
 const popupProfile = document.querySelector('#popup-profile');
+const popupProfileName = popupProfile.querySelector('.popup__text_type_name');
+const popupProfileCaption = popupProfile.querySelector('.popup__text_type_caption');
 const popupProfileCloseButton = popupProfile.querySelector('.popup__close-btn');
 const profileName = profile.querySelector('.profile__name');
 const profileCaption = profile.querySelector('.profile__caption');
@@ -37,8 +39,8 @@ const popupImageItem = new PopupWithImage('#popup-image');
 
 //функция создания элемента карточки из класса карточки по входным значениям
 function renderCard(nameCard, linkCard) {
-  const newAddCard = new Card({ name: nameCard, link: linkCard}, 
-      '#element-template', () => popupImageItem.open(nameCard, linkCard));
+  const newAddCard = new Card({ name: nameCard, link: linkCard },
+    '#element-template', () => popupImageItem.open(nameCard, linkCard));
   const newAddCardElement = newAddCard.createCard();
   return newAddCardElement
 }
@@ -88,14 +90,12 @@ const popupProfileItem = new PopupWithForm({ popupSelector: '#popup-profile', ha
 const popupCardItem = new PopupWithForm({ popupSelector: '#popup-card', handleFormSubmit: submitPopupCard })
 
 //открытие попапов
-profileEditButton.addEventListener('click', () => popupProfileItem.open());
+profileEditButton.addEventListener('click', () => {
+  popupProfileItem.open();
+  popupProfileName.value = profileName.textContent;
+  popupProfileCaption.value = profileCaption.textContent
+});
 profileAddButton.addEventListener('click', () => popupCardItem.open());
-
-//закрытие попапов
-
-popupProfileCloseButton.addEventListener('click', () => popupProfileItem.close());
-popupImageCloseButton.addEventListener('click', () => popupImageItem.close());
-popupCardCloseButton.addEventListener('click', () => popupCardItem.close());
 
 //валидация через класс
 const cardValidateItem = new FormValidator(configPopupValidation, popupCardForm);
