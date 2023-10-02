@@ -22,19 +22,23 @@ export class Card {
     deleteButton.addEventListener('click', () => this._cloneElement.remove());
   }
 
-  createCard() {
-    this._cloneElement = this._getTemplate();
-    const elementImage = this._cloneElement.querySelector('.element__image');
-
-    this._cloneElement.querySelector('.element__title').textContent = this._name;
-    elementImage.src = this._link;
-    elementImage.alt = this._name;
-
+  _setEventListeners(){
     this._changeLike(this._cloneElement.querySelector('.element__like-btn'));
 
     this._removeCard(this._cloneElement.querySelector('.element__trash-btn'));
     
-    elementImage.addEventListener('click', () => this._handleCardClick());
+    this._elementImage.addEventListener('click', () => this._handleCardClick());
+  }
+
+  createCard() {
+    this._cloneElement = this._getTemplate();
+    this._elementImage = this._cloneElement.querySelector('.element__image');
+
+    this._cloneElement.querySelector('.element__title').textContent = this._name;
+    this._elementImage.src = this._link;
+    this._elementImage.alt = this._name;
+
+    this._setEventListeners();
 
     return this._cloneElement;
   }

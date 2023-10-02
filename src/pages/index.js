@@ -1,37 +1,22 @@
 //импорты
 import { Card } from '../components/Card.js';
 import { FormValidator } from '../components/FormValidator.js';
-import { popupImage, initialCards } from '../utils/constants.js';
+import {
+  initialCards, configPopupValidation, profileEditButton, profileAddButton, popupProfileName,
+  popupProfileCaption, popupProfileForm, popupCardForm
+} from '../utils/constants.js';
 import { Section } from '../components/Section.js';
-
 import { PopupWithForm } from '../components/PopupWithForm.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
+import { UserInfo } from '../components/UserInfo.js';
 
 // index.js
 import './index.css';
 
-const configPopupValidation = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__text',
-  submitButtonSelector: '.popup__submit-btn',
-  inactiveButtonClass: 'popup__submit-btn_disabled',
-  inputErrorClass: 'popup__error_active'
-};
+//создание класса информации по профилю юзера: имени и описания
+const UserInfoProfile = new UserInfo({ nameSelector: '.profile__name', captionSelector: '.profile__caption' });
 
-const profile = document.querySelector('.profile');
-const profileEditButton = profile.querySelector('.profile__edit-btn');
-const profileAddButton = profile.querySelector('.profile__add-btn');
-const popupProfile = document.querySelector('#popup-profile');
-const popupProfileName = popupProfile.querySelector('.popup__text_type_name');
-const popupProfileCaption = popupProfile.querySelector('.popup__text_type_caption');
-const profileName = profile.querySelector('.profile__name');
-const profileCaption = profile.querySelector('.profile__caption');
-const popupProfileForm = popupProfile.querySelector('.popup__form');
-
-const popupCard = document.querySelector('#popup-card');
-const cardSubmitButton = popupCard.querySelector('.popup__submit-btn');
-const popupCardForm = popupCard.querySelector('.popup__form');
-
+//создание класса для попапа открытия картинки
 const popupImageItem = new PopupWithImage('#popup-image');
 
 //функция создания элемента карточки из класса карточки по входным значениям
@@ -53,53 +38,36 @@ const cardInitialSection = new Section({
 //добавление дефолтных карточек при помощи Section
 cardInitialSection.renderItems();
 
-// функция добавления введенной информации на страницу
-
+// функция добавления введенной информации на страницу с использованием класса UserInfo
 function addInfo(obj) {
-
-  const [profileNameValue, profileCaptionValue] = Object.values(obj);
-
-  profileName.textContent = profileNameValue;
-  profileCaption.textContent = profileCaptionValue;
+  UserInfoProfile.setUserInfo({ nameInput: obj.namePopup, captionInput: obj.captionPopup });
 }
 
 //функция сабмита попапа карты
-
 function submitPopupCard(obj) {
-
-  const [cardTitleValue, cardLinkValue] = Object.values(obj);
-
-  const cardInputSection = new Section({
-    items: ([{ name: cardTitleValue, link: cardLinkValue }]),
-    renderer: (cardItem) => {
-      cardInitialSection.addItem(renderCard(cardItem.name, cardItem.link));
-    }
-  },
-    '.elements');
-
-  cardInputSection.renderItems();
+  cardInitialSection.addItem(renderCard(obj.titlePopup, obj.linkPopup));
 }
 
 //создание классов Popup
 
 const popupProfileItem = new PopupWithForm({ popupSelector: '#popup-profile', handleFormSubmit: addInfo });
 
-const popupCardItem = new PopupWithForm({
-  popupSelector: '#popup-card',
-  handleFormSubmit: submitPopupCard,
-  postCloseHandler: () => cardValidateItem.toggleButtonState(cardSubmitButton, popupCardForm.checkValidity())
-})
+const popupCardItem = new PopupWithForm({ popupSelector: '#popup-card', handleFormSubmit: submitPopupCard });
 
-//открытие попапов
+//открытие попапа добавления данных профиля с использованием класса UserInfo
 profileEditButton.addEventListener('click', () => {
   popupProfileItem.open();
-  popupProfileName.value = profileName.textContent;
-  popupProfileCaption.value = profileCaption.textContent
-});
-profileAddButton.addEventListener('click', () => popupCardItem.open());
 
-//валидация через класс
+  popupProfileName.value = UserInfoProfile.getUserInfo().name;
+  popupProfileCaption.value = UserInfoProfile.getUserInfo().caption;
+});
+
+//добавляем открытие попапа добавляения карточки, а также принудительный тоггл во время открытия
+profileAddButton.addEventListener('click', () => { popupCardItem.open(), cardValidateItem.toggleButtonState() });
+
+//валидация попапов через классы
 const cardValidateItem = new FormValidator(configPopupValidation, popupCardForm);
 cardValidateItem.enableValidation();
+
 const profileValidateItem = new FormValidator(configPopupValidation, popupProfileForm);
 profileValidateItem.enableValidation();

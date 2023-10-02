@@ -9,18 +9,17 @@
 import Popup from './Popup.js';
 
 export class PopupWithForm extends Popup {
-  constructor({ popupSelector, handleFormSubmit, postCloseHandler}) {
+  constructor({ popupSelector, handleFormSubmit}) {
     super(popupSelector);
     this._handleFormSubmit = handleFormSubmit;
-    this._postCloseHandler = postCloseHandler;
     this._popupForm = this._popupElement.querySelector('.popup__form');
-    this._popupInput = this._popupElement.querySelectorAll('.popup__text');
+    this._popupInputs = this._popupElement.querySelectorAll('.popup__text');
     this.setEventListeners();
   }
 
   _getInputValues() {
     this._formValues = {};
-    this._popupInput.forEach(input => this._formValues[input.name] = input.value);
+    this._popupInputs.forEach(input => this._formValues[input.name] = input.value);
     
     return this._formValues;
   }
@@ -32,6 +31,13 @@ export class PopupWithForm extends Popup {
       this._handleFormSubmit(this._getInputValues());
       this.close();
     })
+  }
+
+  //метод для вставки данных в инпуты, чтобы не искать эти инпуты в index.js
+  setInputValues(data) {
+    this._popupInputs.forEach((input) => {
+      input.value = data[input.name];
+    });
   }
 
   close() {

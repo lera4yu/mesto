@@ -14,7 +14,7 @@ export class UserInfo {
     return {name: this._name.textContent, caption: this._caption.textContent};
   }
 
-  setUserInfo(nameInput, captionInput) {
+  setUserInfo({nameInput, captionInput}) {
     this._name.textContent = nameInput;
     this._caption.textContent = captionInput;
   }
