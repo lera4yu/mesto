@@ -18,6 +18,7 @@ const popupProfileName = popupProfile.querySelector('.popup__text_type_name');
 const popupProfileCaption = popupProfile.querySelector('.popup__text_type_caption');
 const profileName = profile.querySelector('.profile__name');
 const profileCaption = profile.querySelector('.profile__caption');
+const profileAvatar = profile.querySelector('.profile__avatar');
 const popupProfileForm = document.forms["formPopupProfile"];
 
 const popupCard = document.querySelector('#popup-card');
@@ -53,4 +54,4 @@ const initialCards = [
 
 export {popupImage, popImg, popTitle, initialCards, configPopupValidation, profile, profileEditButton, profileAddButton,
   popupProfile, popupProfileName, popupProfileCaption, profileName, profileCaption, popupProfileForm, 
-  popupCard, cardSubmitButton, popupCardForm};
+  popupCard, cardSubmitButton, popupCardForm, profileAvatar};

@@ -17,11 +17,11 @@
 
   <main>
     <section class="profile">
-      <img class="profile__avatar" src="<%=require('./images/profile-image.jpg')%>" alt="Жак-Ив Кусто в красной шапке">
+      <img class="profile__avatar" src="#" alt="Аватарка профиля">
       <div class="profile__info">
-        <h1 class="profile__name">Жак-Ив Кусто</h1>
+        <h1 class="profile__name"></h1>
         <button class="profile__edit-btn" type="button"></button>
-        <p class="profile__caption">Исследователь океана</p>
+        <p class="profile__caption"></p>
       </div>
       <button class="profile__add-btn" type="button"></button>
     </section>
@@ -70,13 +70,25 @@
       <button class="popup__close-btn" type="button"></button>
     </div>
   </div>
+  <div class="popup" id="popup-delete-card">
+    <div class="popup__container">
+      <form class="popup__form" name="formPopupDeleteCard">
+        <h2 class="popup__title popup__title_type_delete">Вы уверены?</h2>
+        <button type="submit" class="popup__submit-btn btnPopup-delete-card">Да</button>
+      </form>
+      <button class="popup__close-btn" type="button"></button>
+    </div>
+  </div>
   <template id="element-template">
     <article class="element">
       <img class="element__image" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg"
         alt="Фотография">
       <div class="element__info">
         <h2 class="element__title"></h2>
-        <button class="element__like-btn" type="button"></button>
+        <div class="element__like">
+          <button class="element__like-btn" type="button"></button>
+          <h3 class="element__like-count"></h3>
+        </div>
       </div>
       <button class="element__trash-btn" type="button"></button>
     </article>

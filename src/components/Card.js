@@ -1,15 +1,33 @@
 export class Card {
-  constructor(data, templateSelector, handleCardClick) {
+  constructor(data, profileId, templateSelector, handleCardClick, deleteCardClick) {
     this._templateSelector = templateSelector;
     this._name = data.name;
     this._link = data.link;
+    this._likes = data.likes;
+    this._userId = data.owner._id;
+    console.log(data);
+    this._profileId = profileId;
+    this._cardId = data.cardId;
+    console.log(data.owner._id, data.cardId, profileId);
     this._handleCardClick = handleCardClick;
+    this._deleteCardClick = deleteCardClick;
   }
 
   _getTemplate() {
     const cardElement = document.querySelector(this._templateSelector).content.querySelector('.element').cloneNode(true);
 
     return cardElement;
+  }
+
+  _likesCounter() {
+    const likeCountElement = this._cloneElement.querySelector('.element__like-count');
+    if (this._likes.length > 0) {
+      likeCountElement.classList.add('element__like-count_opened');
+      likeCountElement.textContent = this._likes.length;
+    }
+    else {
+      likeCountElement.textContent = '';
+    }
   }
 
   _changeLike(likeButton) {
@@ -19,15 +37,27 @@ export class Card {
   }
 
   _removeCard(deleteButton) {
-    deleteButton.addEventListener('click', () => this._cloneElement.remove());
+    deleteButton.addEventListener('click', () => this._deleteCardClick());
   }
 
-  _setEventListeners(){
-    this._changeLike(this._cloneElement.querySelector('.element__like-btn'));
+  deleteCard() {
+    this._cloneElement.remove();
+    this._cloneElement = null;
+  }
 
-    this._removeCard(this._cloneElement.querySelector('.element__trash-btn'));
-    
+  _setEventListeners() {
+    this._changeLike(this._cloneElement.querySelector('.element__like-btn'));
+    this._trashBtnElement = this._cloneElement.querySelector('.element__trash-btn');
+
+    if (this._userId == this._profileId) {
+      this._removeCard(this._trashBtnElement);
+    } else {
+      this._trashBtnElement.remove();
+    }
+
     this._elementImage.addEventListener('click', () => this._handleCardClick());
+
+    this._likesCounter();
   }
 
   createCard() {

@@ -5,9 +5,10 @@
 //Содержит публичный метод setUserInfo, который принимает новые данные пользователя и добавляет их на страницу.
 
 export class UserInfo {
-  constructor({nameSelector, captionSelector}) {
+  constructor({nameSelector, captionSelector, avatarSelector}) {
     this._name = document.querySelector(nameSelector);
     this._caption = document.querySelector(captionSelector);
+    this._avatar = document.querySelector(avatarSelector);
   }
 
   getUserInfo() {
@@ -17,5 +18,10 @@ export class UserInfo {
   setUserInfo({nameInput, captionInput}) {
     this._name.textContent = nameInput;
     this._caption.textContent = captionInput;
+  }
+
+  setUserAvatar(avatarInput) {
+    this._avatar.src = avatarInput;
+    this._avatar.alt = this._name.textContent;
   }
 }
