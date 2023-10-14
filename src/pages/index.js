@@ -51,6 +51,8 @@ const cardsApi = await fetch('https://mesto.nomoreparties.co/v1/cohort-77/cards'
     return result;
   });
 
+  console.log(cardsApi);
+
 //создание класса для попапа открытия картинки
 const popupImageItem = new PopupWithImage('#popup-image');
 
@@ -68,6 +70,7 @@ const popupDeleteCard = new PopupWithAction({
 
 //функция создания элемента карточки из класса карточки по входным значениям
 function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInfoId) {
+  console.log(ownerCard);
   const newAddCard = new Card({
     name: nameCard,
     link: linkCard,
@@ -123,7 +126,7 @@ function submitPopupCard(obj) {
       link: obj.linkPopup
     })
   }).then((res) => res.json()).then(obj => { console.log(obj); return obj })
-    .then((obj) => cardInitialSection.addItem(renderCard(obj.name, obj.link, obj.likes, obj._id, userApiInfo, userApiInfo._id)));
+    .then((obj) => cardInitialSection.addItem(renderCard(obj.name, obj.link, obj.likes, userApiInfo, obj._id, userApiInfo._id)));
 }
 
 //функция удаления карточки через Popup

@@ -47,6 +47,7 @@ export class Card {
     this._changeLike(this._cloneElement.querySelector('.element__like-btn'));
     this._trashBtnElement = this._cloneElement.querySelector('.element__trash-btn');
 
+    console.log(this._userId, this._profileId);
     if (this._userId == this._profileId) {
       this._removeCard(this._trashBtnElement);
     } else {
