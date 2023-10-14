@@ -5,10 +5,8 @@ export class Card {
     this._link = data.link;
     this._likes = data.likes;
     this._userId = data.owner._id;
-    console.log(data);
     this._profileId = profileId;
     this._cardId = data.cardId;
-    console.log(data.owner._id, data.cardId, profileId);
     this._handleCardClick = handleCardClick;
     this._deleteCardClick = deleteCardClick;
   }
@@ -37,7 +35,7 @@ export class Card {
   }
 
   _removeCard(deleteButton) {
-    deleteButton.addEventListener('click', () => this._deleteCardClick());
+    deleteButton.addEventListener('click', (evt) => this._deleteCardClick(this));
   }
 
   deleteCard() {

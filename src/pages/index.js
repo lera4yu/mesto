@@ -7,6 +7,7 @@ import {
 } from '../utils/constants.js';
 import { Section } from '../components/Section.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
+import { PopupWithAction } from '../components/PopupWithAction.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { UserInfo } from '../components/UserInfo.js';
 
@@ -32,8 +33,6 @@ const userApiInfo = await fetch('https://mesto.nomoreparties.co/v1/cohort-77/use
     return result;
   });
 
-console.log(userApiInfo);
-
 //задаем первичные имя и описание профилю юзера
 UserInfoProfile.setUserInfo({ nameInput: userApiInfo.name, captionInput: userApiInfo.about });
 
@@ -52,17 +51,31 @@ const cardsApi = await fetch('https://mesto.nomoreparties.co/v1/cohort-77/cards'
     return result;
   });
 
-console.log(cardsApi);
-
 //создание класса для попапа открытия картинки
 const popupImageItem = new PopupWithImage('#popup-image');
 
-const popupDeleteCard = new PopupWithForm( { popupSelector: '#popup-delete-card', handleFormSubmit: (cardItem) => cardItem.delete()});
+const popupDeleteCard = new PopupWithAction({
+  popupSelector: '#popup-delete-card',
+  handler: ((cardItem) => {
+    fetch(`https://mesto.nomoreparties.co/v1/cohort-77/cards/${cardItem._cardId}`, {
+      headers: {
+        authorization: 'cd6216f4-847a-4421-99d4-0436178223c8'
+      },
+      method: "DELETE"
+    }).then(((res) => cardItem.deleteCard()));
+  })
+});
 
 //функция создания элемента карточки из класса карточки по входным значениям
-function renderCard(nameCard, linkCard, likesCard, ownerCard, userApiInfoId, idCard) {
-  const newAddCard = new Card({ name: nameCard, link: linkCard, likes: likesCard, owner: ownerCard, cardId: idCard }, userApiInfoId,
-    '#element-template', () => popupImageItem.open(nameCard, linkCard),  () => popupDeleteCard.open());
+function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInfoId) {
+  const newAddCard = new Card({
+    name: nameCard,
+    link: linkCard,
+    likes: likesCard,
+    owner: ownerCard,
+    cardId: idCard
+  }, userApiInfoId,
+    '#element-template', () => popupImageItem.open(nameCard, linkCard), (card) => popupDeleteCard.open(card));
   const newAddCardElement = newAddCard.createCard();
   return newAddCardElement
 }
@@ -71,7 +84,7 @@ function renderCard(nameCard, linkCard, likesCard, ownerCard, userApiInfoId, idC
 const cardInitialSection = new Section({
   items: cardsApi.reverse(),
   renderer: (cardItem) => {
-    cardInitialSection.addItem(renderCard(cardItem.name, cardItem.link, cardItem.likes, cardItem.owner, userApiInfo._id, cardItem._id));
+    cardInitialSection.addItem(renderCard(cardItem.name, cardItem.link, cardItem.likes, cardItem.owner, cardItem._id, userApiInfo._id));
   }
 }, '.elements');
 
@@ -98,8 +111,6 @@ function addInfo(obj) {
 
 //функция сабмита попапа карты
 function submitPopupCard(obj) {
-  cardInitialSection.addItem(renderCard(obj.titlePopup, obj.linkPopup, [], userApiInfo, userApiInfo._id));
-  console.log(userApiInfo._id);
   //добавление новой карточки 
   fetch('https://mesto.nomoreparties.co/v1/cohort-77/cards', {
     method: 'POST',
@@ -111,10 +122,11 @@ function submitPopupCard(obj) {
       name: obj.titlePopup,
       link: obj.linkPopup
     })
-  }).then(res => console.log(res.json()));
+  }).then((res) => res.json()).then(obj => { console.log(obj); return obj })
+    .then((obj) => cardInitialSection.addItem(renderCard(obj.name, obj.link, obj.likes, obj._id, userApiInfo, userApiInfo._id)));
 }
 
- //функция удаления карточки через Popup
+//функция удаления карточки через Popup
 
 
 //создание классов Popup
@@ -122,8 +134,6 @@ function submitPopupCard(obj) {
 const popupProfileItem = new PopupWithForm({ popupSelector: '#popup-profile', handleFormSubmit: addInfo });
 
 const popupCardItem = new PopupWithForm({ popupSelector: '#popup-card', handleFormSubmit: submitPopupCard });
-
-console.log(popupDeleteCard);
 
 //открытие попапа добавления данных профиля с использованием класса UserInfo
 profileEditButton.addEventListener('click', () => {
