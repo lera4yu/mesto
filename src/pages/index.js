@@ -10,6 +10,7 @@ import { PopupWithForm } from '../components/PopupWithForm.js';
 import { PopupWithAction } from '../components/PopupWithAction.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { UserInfo } from '../components/UserInfo.js';
+import { Api } from '../components/Api.js';
 
 // index.js
 import './index.css';
@@ -21,17 +22,18 @@ const UserInfoProfile = new UserInfo({
   avatarSelector: '.profile__avatar'
 });
 
-//находим информацию о юзере через API и выносим эти данные в константу
-const userApiInfo = await fetch('https://mesto.nomoreparties.co/v1/cohort-77/users/me', {
+//создание элемента класса API для подключения страницы к серверу
+
+const api = new Api({
+  url: 'https://mesto.nomoreparties.co/v1/cohort-77',
   headers: {
-    authorization: 'cd6216f4-847a-4421-99d4-0436178223c8'
-  },
-  method: "GET"
-})
-  .then(res => res.json())
-  .then((result) => {
-    return result;
-  });
+    authorization: 'cd6216f4-847a-4421-99d4-0436178223c8',
+    'Content-Type': 'application/json'
+  }
+});
+
+//находим информацию о юзере через API и выносим эти данные в константу
+const userApiInfo = await api.getUserInfo();
 
 //задаем первичные имя и описание профилю юзера
 UserInfoProfile.setUserInfo({ nameInput: userApiInfo.name, captionInput: userApiInfo.about });
@@ -40,37 +42,18 @@ UserInfoProfile.setUserInfo({ nameInput: userApiInfo.name, captionInput: userApi
 UserInfoProfile.setUserAvatar(userApiInfo.avatar);
 
 //находим информацию о дефолтных карточках через API и выносим эти данные в константу
-const cardsApi = await fetch('https://mesto.nomoreparties.co/v1/cohort-77/cards', {
-  headers: {
-    authorization: 'cd6216f4-847a-4421-99d4-0436178223c8'
-  },
-  method: "GET"
-})
-  .then(res => res.json())
-  .then((result) => {
-    return result;
-  });
-
-  console.log(cardsApi);
+const cardsApi = await api.getInitialCards();
 
 //создание класса для попапа открытия картинки
 const popupImageItem = new PopupWithImage('#popup-image');
 
 const popupDeleteCard = new PopupWithAction({
   popupSelector: '#popup-delete-card',
-  handler: ((cardItem) => {
-    fetch(`https://mesto.nomoreparties.co/v1/cohort-77/cards/${cardItem._cardId}`, {
-      headers: {
-        authorization: 'cd6216f4-847a-4421-99d4-0436178223c8'
-      },
-      method: "DELETE"
-    }).then(((res) => cardItem.deleteCard()));
-  })
-});
+  handler: (cardItem) => {api.deleteCard(cardItem._cardId).then(((res) => cardItem.deleteCard()));
+  }});
 
 //функция создания элемента карточки из класса карточки по входным значениям
 function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInfoId) {
-  console.log(ownerCard);
   const newAddCard = new Card({
     name: nameCard,
     link: linkCard,
@@ -96,41 +79,16 @@ cardInitialSection.renderItems();
 
 // функция добавления введенной информации на страницу с использованием класса UserInfo
 function addInfo(obj) {
-  UserInfoProfile.setUserInfo({ nameInput: obj.namePopup, captionInput: obj.captionPopup });
-
-  //обновление инфы в серваке 
-  fetch('https://mesto.nomoreparties.co/v1/cohort-77/users/me', {
-    method: 'PATCH',
-    headers: {
-      authorization: 'cd6216f4-847a-4421-99d4-0436178223c8',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: UserInfoProfile.getUserInfo().name,
-      about: UserInfoProfile.getUserInfo().caption
-    })
-  });
+  api.updateUserInfo({name: obj.namePopup, caption: obj.captionPopup})
+  .then((res) => UserInfoProfile.setUserInfo({ nameInput: obj.namePopup, captionInput: obj.captionPopup }))
 }
 
 //функция сабмита попапа карты
 function submitPopupCard(obj) {
   //добавление новой карточки 
-  fetch('https://mesto.nomoreparties.co/v1/cohort-77/cards', {
-    method: 'POST',
-    headers: {
-      authorization: 'cd6216f4-847a-4421-99d4-0436178223c8',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: obj.titlePopup,
-      link: obj.linkPopup
-    })
-  }).then((res) => res.json()).then(obj => { console.log(obj); return obj })
-    .then((obj) => cardInitialSection.addItem(renderCard(obj.name, obj.link, obj.likes, userApiInfo, obj._id, userApiInfo._id)));
+  api.addNewCard(obj)
+    .then((res) => cardInitialSection.addItem(renderCard(res.name, res.link, res.likes, userApiInfo, res._id, userApiInfo._id)));
 }
-
-//функция удаления карточки через Popup
-
 
 //создание классов Popup
 
