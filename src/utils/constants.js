@@ -21,9 +21,13 @@ const profileCaption = profile.querySelector('.profile__caption');
 const profileAvatar = profile.querySelector('.profile__avatar');
 const popupProfileForm = document.forms["formPopupProfile"];
 
+const profileAvatarEditButton = profile.querySelector('.profile__avatar-edit-btn');
+
 const popupCard = document.querySelector('#popup-card');
 const cardSubmitButton = popupCard.querySelector('.popup__submit-btn');
 const popupCardForm = document.forms["formPopupCard"];
+
+const popupAvatarForm = document.forms["formPopupAvatar"];
 
 const initialCards = [
   {
@@ -54,4 +58,4 @@ const initialCards = [
 
 export {popupImage, popImg, popTitle, initialCards, configPopupValidation, profile, profileEditButton, profileAddButton,
   popupProfile, popupProfileName, popupProfileCaption, profileName, profileCaption, popupProfileForm, 
-  popupCard, cardSubmitButton, popupCardForm, profileAvatar};
+  popupCard, cardSubmitButton, popupCardForm, profileAvatar, profileAvatarEditButton, popupAvatarForm};

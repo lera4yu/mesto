@@ -17,7 +17,10 @@
 
   <main>
     <section class="profile">
-      <img class="profile__avatar" src="#" alt="Аватарка профиля">
+      <div class="profile__avatar-container">
+        <img class="profile__avatar" src="#" alt="Аватарка профиля">
+        <button class="profile__avatar-edit-btn" type="button"></button>
+      </div>
       <div class="profile__info">
         <h1 class="profile__name"></h1>
         <button class="profile__edit-btn" type="button"></button>
@@ -75,6 +78,18 @@
       <form class="popup__form" name="formPopupDeleteCard">
         <h2 class="popup__title popup__title_type_delete">Вы уверены?</h2>
         <button type="submit" class="popup__submit-btn btnPopup-delete-card">Да</button>
+      </form>
+      <button class="popup__close-btn" type="button"></button>
+    </div>
+  </div>
+  <div class="popup" id="popup-avatar">
+    <div class="popup__container">
+      <form class="popup__form" name="formPopupAvatar">
+        <h2 class="popup__title">Обновить аватар</h2>
+        <input type="url" placeholder="Ссылка на картинку" class="popup__text popup__text_type_link-avatar"
+          name="linkPopup" required>
+        <span class="popup__error" id="linkPopup-error"></span>
+        <button type="submit" class="popup__submit-btn popup__submit-btn_disabled btnPopup-profile">Сохранить</button>
       </form>
       <button class="popup__close-btn" type="button"></button>
     </div>

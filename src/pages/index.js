@@ -3,7 +3,8 @@ import { Card } from '../components/Card.js';
 import { FormValidator } from '../components/FormValidator.js';
 import {
   configPopupValidation, profileEditButton, profileAddButton, popupProfileName,
-  popupProfileCaption, popupProfileForm, popupCardForm
+  popupProfileCaption, popupProfileForm, popupCardForm, profileAvatarEditButton,
+  profileAvatar, popupAvatarForm
 } from '../utils/constants.js';
 import { Section } from '../components/Section.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
@@ -49,8 +50,13 @@ const popupImageItem = new PopupWithImage('#popup-image');
 
 const popupDeleteCard = new PopupWithAction({
   popupSelector: '#popup-delete-card',
-  handler: (cardItem) => {api.deleteCard(cardItem._cardId).then(((res) => cardItem.deleteCard()));
-  }});
+  handler: (cardItem) => {
+    api.deleteCard(cardItem._cardId)
+    .then((res) => {
+      if (res) cardItem.deleteCard()
+    });
+  }
+});
 
 //функция создания элемента карточки из класса карточки по входным значениям
 function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInfoId) {
@@ -61,11 +67,11 @@ function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInf
     owner: ownerCard,
     cardId: idCard
   }, userApiInfoId,
-    '#element-template', 
-    () => popupImageItem.open(nameCard, linkCard), 
-    (card) => popupDeleteCard.open(card), 
-    (card) => {api.addLike(idCard).then((res) => card.updatelikesCounter(res.likes))},
-    (card) => {api.deleteLike(idCard).then((res) => card.updatelikesCounter(res.likes))});
+    '#element-template',
+    () => popupImageItem.open(nameCard, linkCard),
+    (card) => popupDeleteCard.open(card),
+    (card) => { api.addLike(idCard).then((res) => card.updatelikesCounter(res.likes)) },
+    (card) => { api.deleteLike(idCard).then((res) => card.updatelikesCounter(res.likes)) });
   const newAddCardElement = newAddCard.createCard();
   return newAddCardElement
 }
@@ -83,15 +89,25 @@ cardInitialSection.renderItems();
 
 // функция добавления введенной информации на страницу с использованием класса UserInfo
 function addInfo(obj) {
-  api.updateUserInfo({name: obj.namePopup, caption: obj.captionPopup})
-  .then((res) => UserInfoProfile.setUserInfo({ nameInput: obj.namePopup, captionInput: obj.captionPopup }))
+  popupProfileItem.addSavingAnimation();
+  api.updateUserInfo({ name: obj.namePopup, caption: obj.captionPopup })
+    .then((res) => UserInfoProfile.setUserInfo({ nameInput: obj.namePopup, captionInput: obj.captionPopup }))
+    .finally(() => {popupProfileItem.returnDefaultTextBtn()});
 }
 
 //функция сабмита попапа карты
 function submitPopupCard(obj) {
-  //добавление новой карточки 
+  popupCardItem.addSavingAnimation();
   api.addNewCard(obj)
-    .then((res) => cardInitialSection.addItem(renderCard(res.name, res.link, res.likes, userApiInfo, res._id, userApiInfo._id)));
+    .then((res) => cardInitialSection.addItem(renderCard(res.name, res.link, res.likes, userApiInfo, res._id, userApiInfo._id)))
+    .finally(() => {popupCardItem.returnDefaultTextBtn()});
+}
+
+//функция обновления аватара профиля
+function updateAvatar(obj) {
+  popupAvatar.addSavingAnimation();
+  api.updateAvatar(obj.linkPopup).then((res) => profileAvatar.src = obj.linkPopup)
+  .finally(() => {popupAvatar.returnDefaultTextBtn()});
 }
 
 //создание классов Popup
@@ -99,6 +115,8 @@ function submitPopupCard(obj) {
 const popupProfileItem = new PopupWithForm({ popupSelector: '#popup-profile', handleFormSubmit: addInfo });
 
 const popupCardItem = new PopupWithForm({ popupSelector: '#popup-card', handleFormSubmit: submitPopupCard });
+
+const popupAvatar = new PopupWithForm({ popupSelector: '#popup-avatar', handleFormSubmit: updateAvatar })
 
 //открытие попапа добавления данных профиля с использованием класса UserInfo
 profileEditButton.addEventListener('click', () => {
@@ -108,8 +126,11 @@ profileEditButton.addEventListener('click', () => {
   popupProfileCaption.value = UserInfoProfile.getUserInfo().caption;
 });
 
+//открытие попапа обновления аватара профиля
+profileAvatarEditButton.addEventListener('click', () => {popupAvatar.open(), avatarValidateItem.toggleButtonState()});
+
 //добавляем открытие попапа добавляения карточки, а также принудительный тоггл во время открытия
-profileAddButton.addEventListener('click', () => { popupCardItem.open(), cardValidateItem.toggleButtonState() });
+profileAddButton.addEventListener('click', () => { popupCardItem.open(), cardValidateItem.toggleButtonState()});
 
 //валидация попапов через классы
 const cardValidateItem = new FormValidator(configPopupValidation, popupCardForm);
@@ -117,3 +138,6 @@ cardValidateItem.enableValidation();
 
 const profileValidateItem = new FormValidator(configPopupValidation, popupProfileForm);
 profileValidateItem.enableValidation();
+
+const avatarValidateItem = new FormValidator(configPopupValidation, popupAvatarForm);
+avatarValidateItem.enableValidation();

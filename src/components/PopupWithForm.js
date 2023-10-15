@@ -9,18 +9,20 @@
 import Popup from './Popup.js';
 
 export class PopupWithForm extends Popup {
-  constructor({ popupSelector, handleFormSubmit}) {
+  constructor({ popupSelector, handleFormSubmit }) {
     super(popupSelector);
     this._handleFormSubmit = handleFormSubmit;
     this._popupForm = this._popupElement.querySelector('.popup__form');
     this._popupInputs = this._popupElement.querySelectorAll('.popup__text');
+    this._submitBtn = this._popupElement.querySelector('.popup__submit-btn');
+    this._defaultTextBtn = this._submitBtn.textContent;
     this.setEventListeners();
   }
 
   _getInputValues() {
     this._formValues = {};
     this._popupInputs.forEach(input => this._formValues[input.name] = input.value);
-    
+
     return this._formValues;
   }
 
@@ -38,6 +40,16 @@ export class PopupWithForm extends Popup {
     this._popupInputs.forEach((input) => {
       input.value = data[input.name];
     });
+  }
+
+  //визуализация процесса сохранения при отправке формы
+  addSavingAnimation() {
+    this._submitBtn.textContent = 'Сохранение...';
+  }
+
+  // Метод добавления стандартного текста кнопке
+  returnDefaultTextBtn() {
+    this._submitBtn.textContent = this._defaultTextBtn;
   }
 
   close() {

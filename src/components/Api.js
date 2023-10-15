@@ -44,6 +44,19 @@ export class Api {
       }))
   };
 
+  //обновление аватара профиля
+
+  updateAvatar(avatarUrl) {
+    return this._checkStatus(
+      fetch(`${this._url}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: this._headers,
+        body: JSON.stringify({
+          avatar: avatarUrl
+        })
+      }))
+  };
+
   //добавление новой карточки на сервер
   addNewCard({ titlePopup, linkPopup }) {
     return this._checkStatus(
@@ -83,7 +96,7 @@ export class Api {
 
   //удаление лайка на карточке
 
-  
+
   deleteLike(cardId) {
     return this._checkStatus(
       fetch(`${this._url}/cards/${cardId}/likes`, {
