@@ -9,7 +9,7 @@ export class Api {
     return this._checkStatus(
       fetch(`${this._url}/cards`, {
         headers: this._headers,
-        method: "GET"
+        method: 'GET'
       }))
   };
 
@@ -18,7 +18,7 @@ export class Api {
     return this._checkStatus(
       fetch(`${this._url}/users/me`, {
         headers: this._headers,
-        method: "GET"
+        method: 'GET'
       }))
   };
 
@@ -27,7 +27,7 @@ export class Api {
     return this._checkStatus(
       fetch(`${this._url}/cards/${cardId}`, {
         headers: this._headers,
-        method: "DELETE"
+        method: 'DELETE'
       }))
   };
 
@@ -70,4 +70,25 @@ export class Api {
       console.log(err); // выведем ошибку в консоль
     });
   };
+
+  //постановка лайка на карточке 
+  
+  addLike(cardId) {
+    return this._checkStatus(
+      fetch(`${this._url}/cards/${cardId}/likes`, {
+        headers: this._headers,
+        method: 'PUT'
+      }))
+  }
+
+  //удаление лайка на карточке
+
+  
+  deleteLike(cardId) {
+    return this._checkStatus(
+      fetch(`${this._url}/cards/${cardId}/likes`, {
+        headers: this._headers,
+        method: 'DELETE'
+      }))
+  }
 }

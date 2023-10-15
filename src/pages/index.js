@@ -61,7 +61,11 @@ function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInf
     owner: ownerCard,
     cardId: idCard
   }, userApiInfoId,
-    '#element-template', () => popupImageItem.open(nameCard, linkCard), (card) => popupDeleteCard.open(card));
+    '#element-template', 
+    () => popupImageItem.open(nameCard, linkCard), 
+    (card) => popupDeleteCard.open(card), 
+    (card) => {api.addLike(idCard).then((res) => card.updatelikesCounter(res.likes))},
+    (card) => {api.deleteLike(idCard).then((res) => card.updatelikesCounter(res.likes))});
   const newAddCardElement = newAddCard.createCard();
   return newAddCardElement
 }
