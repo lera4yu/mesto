@@ -38,7 +38,7 @@ try {
   userApiInfo = await api.getUserInfo()
 }
 catch {
-    console.log(`Получение информации о пользователе привело к ошибке ${err}`); 
+  console.log(`Получение информации о пользователе привело к ошибке ${err}`);
 };
 
 //задаем первичные имя и описание профилю юзера
@@ -51,10 +51,10 @@ userInfoProfile.setUserAvatar(userApiInfo.avatar);
 let cardsApi;
 
 try {
-cardsApi = await api.getInitialCards()
+  cardsApi = await api.getInitialCards()
 }
 catch {
-  console.log(`Получение информации о карточках на сервере привело к ошибке ${err}`); 
+  console.log(`Получение информации о карточках на сервере привело к ошибке ${err}`);
 }
 
 //создание класса для попапа открытия картинки
@@ -67,8 +67,9 @@ const popupDeleteCard = new PopupWithAction({
       .then((res) => {
         if (res) cardItem.deleteCard()
       })
+      .then((res) => popupDeleteCard.close())
       .catch((err) => {
-        console.log(`Удаление карточки привело к ошибке ${err}`); 
+        console.log(`Удаление карточки привело к ошибке ${err}`);
       })
   }
 });
@@ -89,14 +90,14 @@ function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInf
       api.addLike(idCard)
         .then((res) => card.updatelikesCounter(res.likes))
         .catch((err) => {
-          console.log(`Добавление лайка привело к ошибке ${err}`); 
+          console.log(`Добавление лайка привело к ошибке ${err}`);
         })
     },
     (card) => {
       api.deleteLike(idCard)
         .then((res) => card.updatelikesCounter(res.likes))
         .catch((err) => {
-          console.log(`Удаление лайка привело к ошибке ${err}`); 
+          console.log(`Удаление лайка привело к ошибке ${err}`);
         })
     });
   const newAddCardElement = newAddCard.createCard();
@@ -121,7 +122,7 @@ function addInfo(obj) {
     .then((res) => userInfoProfile.setUserInfo({ nameInput: obj.namePopup, captionInput: obj.captionPopup }))
     .then((res) => popupProfileItem.close())
     .catch((err) => {
-      console.log(`Обновление информации о пользователе привело к ошибке ${err}`); 
+      console.log(`Обновление информации о пользователе привело к ошибке ${err}`);
     })
     .finally(() => { popupProfileItem.returnDefaultTextBtn() });
 }
@@ -133,7 +134,7 @@ function submitPopupCard(obj) {
     .then((res) => cardInitialSection.addItem(renderCard(res.name, res.link, res.likes, userApiInfo, res._id, userApiInfo._id)))
     .then((res) => popupCardItem.close())
     .catch((err) => {
-      console.log(`Добавление новой карточки привело к ошибке ${err}`); 
+      console.log(`Добавление новой карточки привело к ошибке ${err}`);
     })
     .finally(() => { popupCardItem.returnDefaultTextBtn() });
 }
@@ -144,7 +145,7 @@ function updateAvatar(obj) {
   api.updateAvatar(obj.linkPopupAvatar).then((res) => userInfoProfile.setUserAvatar(obj.linkPopupAvatar))
     .then((res) => popupAvatar.close())
     .catch((err) => {
-      console.log(`Обновление аватара пользователя привело к ошибке ${err}`); 
+      console.log(`Обновление аватара пользователя привело к ошибке ${err}`);
     })
     .finally(() => { popupAvatar.returnDefaultTextBtn() });
 }
