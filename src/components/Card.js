@@ -20,19 +20,18 @@ export class Card {
   }
 
   _likesCounter() {
-    const likeCountElement = this._cloneElement.querySelector('.element__like-count');
     if (this._likes.length > 0) {
-      likeCountElement.classList.add('element__like-count_opened');
+      this._likeCountElement.classList.add('element__like-count_opened');
 
       this._likes.forEach((like) => {
         if ((like._id === this._profileId) && !(this._likeBtn.classList.contains('.element__like-btn_active'))) {
           this._likeBtn.classList.add('element__like-btn_active');
         }
       });
-      likeCountElement.textContent = this._likes.length;
+      this._likeCountElement.textContent = this._likes.length;
     } else {
-      likeCountElement.classList.remove('element__like-count_opened');
-      likeCountElement.textContent = '';
+      this._likeCountElement.classList.remove('element__like-count_opened');
+      this._likeCountElement.textContent = '';
     }
   }
 
@@ -75,6 +74,7 @@ export class Card {
 
   createCard() {
     this._cloneElement = this._getTemplate();
+    this._likeCountElement = this._cloneElement.querySelector('.element__like-count');
     this._likeBtn = this._cloneElement.querySelector('.element__like-btn');
     this._trashBtnElement = this._cloneElement.querySelector('.element__trash-btn');
     this._elementImage = this._cloneElement.querySelector('.element__image');

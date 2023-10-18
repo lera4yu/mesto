@@ -79,9 +79,7 @@ export class Api {
       }
       // если ошибка, отклоняем промис
       return Promise.reject(`Ошибка: ${res.status}`);
-    }).catch((err) => {
-      console.log(err); // выведем ошибку в консоль
-    });
+    })
   };
 
   //постановка лайка на карточке 

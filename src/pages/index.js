@@ -2,9 +2,7 @@
 import { Card } from '../components/Card.js';
 import { FormValidator } from '../components/FormValidator.js';
 import {
-  configPopupValidation, profileEditButton, profileAddButton, popupProfileName,
-  popupProfileCaption, popupProfileForm, popupCardForm, profileAvatarEditButton,
-  profileAvatar, popupAvatarForm
+  configPopupValidation, profileEditButton, profileAddButton, popupProfileForm, popupCardForm, profileAvatarEditButton, popupAvatarForm
 } from '../utils/constants.js';
 import { Section } from '../components/Section.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
@@ -17,7 +15,7 @@ import { Api } from '../components/Api.js';
 import './index.css';
 
 //создание класса информации по профилю юзера: имени и описания
-const UserInfoProfile = new UserInfo({
+const userInfoProfile = new UserInfo({
   nameSelector: '.profile__name',
   captionSelector: '.profile__caption',
   avatarSelector: '.profile__avatar'
@@ -33,17 +31,31 @@ const api = new Api({
   }
 });
 
-//находим информацию о юзере через API и выносим эти данные в константу
-const userApiInfo = await api.getUserInfo();
+//находим информацию о юзере через API и выносим эти данные в переменную
+let userApiInfo;
+
+try {
+  userApiInfo = await api.getUserInfo()
+}
+catch {
+    console.log(`Получение информации о пользователе привело к ошибке ${err}`); 
+};
 
 //задаем первичные имя и описание профилю юзера
-UserInfoProfile.setUserInfo({ nameInput: userApiInfo.name, captionInput: userApiInfo.about });
+userInfoProfile.setUserInfo({ nameInput: userApiInfo.name, captionInput: userApiInfo.about });
 
 //задаем первичный аватар
-UserInfoProfile.setUserAvatar(userApiInfo.avatar);
+userInfoProfile.setUserAvatar(userApiInfo.avatar);
 
-//находим информацию о дефолтных карточках через API и выносим эти данные в константу
-const cardsApi = await api.getInitialCards();
+//находим информацию о дефолтных карточках через API и выносим эти данные в переменную
+let cardsApi;
+
+try {
+cardsApi = await api.getInitialCards()
+}
+catch {
+  console.log(`Получение информации о карточках на сервере привело к ошибке ${err}`); 
+}
 
 //создание класса для попапа открытия картинки
 const popupImageItem = new PopupWithImage('#popup-image');
@@ -52,9 +64,12 @@ const popupDeleteCard = new PopupWithAction({
   popupSelector: '#popup-delete-card',
   handler: (cardItem) => {
     api.deleteCard(cardItem._cardId)
-    .then((res) => {
-      if (res) cardItem.deleteCard()
-    });
+      .then((res) => {
+        if (res) cardItem.deleteCard()
+      })
+      .catch((err) => {
+        console.log(`Удаление карточки привело к ошибке ${err}`); 
+      })
   }
 });
 
@@ -70,8 +85,20 @@ function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInf
     '#element-template',
     () => popupImageItem.open(nameCard, linkCard),
     (card) => popupDeleteCard.open(card),
-    (card) => { api.addLike(idCard).then((res) => card.updatelikesCounter(res.likes)) },
-    (card) => { api.deleteLike(idCard).then((res) => card.updatelikesCounter(res.likes)) });
+    (card) => {
+      api.addLike(idCard)
+        .then((res) => card.updatelikesCounter(res.likes))
+        .catch((err) => {
+          console.log(`Добавление лайка привело к ошибке ${err}`); 
+        })
+    },
+    (card) => {
+      api.deleteLike(idCard)
+        .then((res) => card.updatelikesCounter(res.likes))
+        .catch((err) => {
+          console.log(`Удаление лайка привело к ошибке ${err}`); 
+        })
+    });
   const newAddCardElement = newAddCard.createCard();
   return newAddCardElement
 }
@@ -91,8 +118,12 @@ cardInitialSection.renderItems();
 function addInfo(obj) {
   popupProfileItem.addSavingAnimation();
   api.updateUserInfo({ name: obj.namePopup, caption: obj.captionPopup })
-    .then((res) => UserInfoProfile.setUserInfo({ nameInput: obj.namePopup, captionInput: obj.captionPopup }))
-    .finally(() => {popupProfileItem.returnDefaultTextBtn()});
+    .then((res) => userInfoProfile.setUserInfo({ nameInput: obj.namePopup, captionInput: obj.captionPopup }))
+    .then((res) => popupProfileItem.close())
+    .catch((err) => {
+      console.log(`Обновление информации о пользователе привело к ошибке ${err}`); 
+    })
+    .finally(() => { popupProfileItem.returnDefaultTextBtn() });
 }
 
 //функция сабмита попапа карты
@@ -100,14 +131,22 @@ function submitPopupCard(obj) {
   popupCardItem.addSavingAnimation();
   api.addNewCard(obj)
     .then((res) => cardInitialSection.addItem(renderCard(res.name, res.link, res.likes, userApiInfo, res._id, userApiInfo._id)))
-    .finally(() => {popupCardItem.returnDefaultTextBtn()});
+    .then((res) => popupCardItem.close())
+    .catch((err) => {
+      console.log(`Добавление новой карточки привело к ошибке ${err}`); 
+    })
+    .finally(() => { popupCardItem.returnDefaultTextBtn() });
 }
 
 //функция обновления аватара профиля
 function updateAvatar(obj) {
   popupAvatar.addSavingAnimation();
-  api.updateAvatar(obj.linkPopup).then((res) => profileAvatar.src = obj.linkPopup)
-  .finally(() => {popupAvatar.returnDefaultTextBtn()});
+  api.updateAvatar(obj.linkPopupAvatar).then((res) => userInfoProfile.setUserAvatar(obj.linkPopupAvatar))
+    .then((res) => popupAvatar.close())
+    .catch((err) => {
+      console.log(`Обновление аватара пользователя привело к ошибке ${err}`); 
+    })
+    .finally(() => { popupAvatar.returnDefaultTextBtn() });
 }
 
 //создание классов Popup
@@ -121,16 +160,14 @@ const popupAvatar = new PopupWithForm({ popupSelector: '#popup-avatar', handleFo
 //открытие попапа добавления данных профиля с использованием класса UserInfo
 profileEditButton.addEventListener('click', () => {
   popupProfileItem.open();
-
-  popupProfileName.value = UserInfoProfile.getUserInfo().name;
-  popupProfileCaption.value = UserInfoProfile.getUserInfo().caption;
+  popupProfileItem.setInputValues(userInfoProfile.getUserInfo());
 });
 
 //открытие попапа обновления аватара профиля
-profileAvatarEditButton.addEventListener('click', () => {popupAvatar.open(), avatarValidateItem.toggleButtonState()});
+profileAvatarEditButton.addEventListener('click', () => { popupAvatar.open(), avatarValidateItem.toggleButtonState() });
 
 //добавляем открытие попапа добавляения карточки, а также принудительный тоггл во время открытия
-profileAddButton.addEventListener('click', () => { popupCardItem.open(), cardValidateItem.toggleButtonState()});
+profileAddButton.addEventListener('click', () => { popupCardItem.open(), cardValidateItem.toggleButtonState() });
 
 //валидация попапов через классы
 const cardValidateItem = new FormValidator(configPopupValidation, popupCardForm);

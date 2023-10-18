@@ -31,14 +31,13 @@ export class PopupWithForm extends Popup {
     this._popupForm.addEventListener('submit', (evt) => {
       evt.preventDefault();
       this._handleFormSubmit(this._getInputValues());
-      this.close();
     })
   }
 
   //метод для вставки данных в инпуты, чтобы не искать эти инпуты в index.js
   setInputValues(data) {
     this._popupInputs.forEach((input) => {
-      input.value = data[input.name];
+      input.value = data[input.name.slice(0, -5)]; //срез строки, чтобы убрать из наименования строки часть Popup
     });
   }
 
@@ -54,9 +53,6 @@ export class PopupWithForm extends Popup {
 
   close() {
     this._popupForm.reset();
-    if (this._postCloseHandler) {
-      this._postCloseHandler();
-    }
     super.close();
   }
 }

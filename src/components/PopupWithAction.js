@@ -23,7 +23,6 @@ export class PopupWithAction extends Popup {
     this._popupForm.addEventListener('submit', (evt) => {
       evt.preventDefault();
       this._handler(this._cardItem);
-      this.close();
     })
   }
 }
