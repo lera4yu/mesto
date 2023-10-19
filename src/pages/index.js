@@ -35,26 +35,82 @@ const api = new Api({
 let userApiInfo;
 
 try {
-  userApiInfo = await api.getUserInfo()
+  userApiInfo = await api.getUserInfo();
+
+  //задаем первичные имя и описание профилю юзера
+  userInfoProfile.setUserInfo({ nameInput: userApiInfo.name, captionInput: userApiInfo.about });
+
+  //задаем первичный аватар
+  userInfoProfile.setUserAvatar(userApiInfo.avatar);
 }
 catch {
   console.log(`Получение информации о пользователе привело к ошибке ${err}`);
 };
 
-//задаем первичные имя и описание профилю юзера
-userInfoProfile.setUserInfo({ nameInput: userApiInfo.name, captionInput: userApiInfo.about });
-
-//задаем первичный аватар
-userInfoProfile.setUserAvatar(userApiInfo.avatar);
+//функция создания элемента карточки из класса карточки по входным значениям
+function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInfoId) {
+  const newAddCard = new Card({
+    name: nameCard,
+    link: linkCard,
+    likes: likesCard,
+    owner: ownerCard,
+    cardId: idCard
+  }, userApiInfoId,
+    '#element-template',
+    () => popupImageItem.open(nameCard, linkCard),
+    (card) => popupDeleteCard.open(card),
+    (card) => {
+      return api.addLike(idCard)
+        .then((res) => card.updatelikesCounter(res.likes))
+        .catch((err) => {
+          console.log(`Добавление лайка привело к ошибке ${err}`);
+        })
+    },
+    (card) => {
+      return api.deleteLike(idCard)
+        .then((res) => card.updatelikesCounter(res.likes))
+        .catch((err) => {
+          console.log(`Удаление лайка привело к ошибке ${err}`);
+        })
+    });
+  const newAddCardElement = newAddCard.createCard();
+  return newAddCardElement
+}
 
 //находим информацию о дефолтных карточках через API и выносим эти данные в переменную
 let cardsApi;
 
+//определяем переменную секции с карточками вне промиса
+let cardInitialSection;
+
 try {
-  cardsApi = await api.getInitialCards()
+  cardsApi = await api.getInitialCards();
+
+  // Использование Section для добавления карточек на страницу с использованием карточек API
+  cardInitialSection = new Section({
+    items: cardsApi.reverse(),
+    renderer: (cardItem) => {
+      cardInitialSection.addItem(renderCard(cardItem.name, cardItem.link, cardItem.likes, cardItem.owner, cardItem._id, userApiInfo._id));
+    }
+  }, '.elements');
+
+  //добавление дефолтных карточек при помощи Section
+  cardInitialSection.renderItems();
 }
 catch {
   console.log(`Получение информации о карточках на сервере привело к ошибке ${err}`);
+}
+
+//функция сабмита попапа карты
+function submitPopupCard(obj) {
+  popupCardItem.addSavingAnimation();
+  api.addNewCard(obj)
+    .then((res) => cardInitialSection.addItem(renderCard(res.name, res.link, res.likes, userApiInfo, res._id, userApiInfo._id)))
+    .then((res) => popupCardItem.close())
+    .catch((err) => {
+      console.log(`Добавление новой карточки привело к ошибке ${err}`);
+    })
+    .finally(() => { popupCardItem.returnDefaultTextBtn() });
 }
 
 //создание класса для попапа открытия картинки
@@ -74,47 +130,6 @@ const popupDeleteCard = new PopupWithAction({
   }
 });
 
-//функция создания элемента карточки из класса карточки по входным значениям
-function renderCard(nameCard, linkCard, likesCard, ownerCard, idCard, userApiInfoId) {
-  const newAddCard = new Card({
-    name: nameCard,
-    link: linkCard,
-    likes: likesCard,
-    owner: ownerCard,
-    cardId: idCard
-  }, userApiInfoId,
-    '#element-template',
-    () => popupImageItem.open(nameCard, linkCard),
-    (card) => popupDeleteCard.open(card),
-    (card) => {
-      api.addLike(idCard)
-        .then((res) => card.updatelikesCounter(res.likes))
-        .catch((err) => {
-          console.log(`Добавление лайка привело к ошибке ${err}`);
-        })
-    },
-    (card) => {
-      api.deleteLike(idCard)
-        .then((res) => card.updatelikesCounter(res.likes))
-        .catch((err) => {
-          console.log(`Удаление лайка привело к ошибке ${err}`);
-        })
-    });
-  const newAddCardElement = newAddCard.createCard();
-  return newAddCardElement
-}
-
-// Использование Section для добавления карточек на страницу с использованием карточек API
-const cardInitialSection = new Section({
-  items: cardsApi.reverse(),
-  renderer: (cardItem) => {
-    cardInitialSection.addItem(renderCard(cardItem.name, cardItem.link, cardItem.likes, cardItem.owner, cardItem._id, userApiInfo._id));
-  }
-}, '.elements');
-
-//добавление дефолтных карточек при помощи Section
-cardInitialSection.renderItems();
-
 // функция добавления введенной информации на страницу с использованием класса UserInfo
 function addInfo(obj) {
   popupProfileItem.addSavingAnimation();
@@ -125,18 +140,6 @@ function addInfo(obj) {
       console.log(`Обновление информации о пользователе привело к ошибке ${err}`);
     })
     .finally(() => { popupProfileItem.returnDefaultTextBtn() });
-}
-
-//функция сабмита попапа карты
-function submitPopupCard(obj) {
-  popupCardItem.addSavingAnimation();
-  api.addNewCard(obj)
-    .then((res) => cardInitialSection.addItem(renderCard(res.name, res.link, res.likes, userApiInfo, res._id, userApiInfo._id)))
-    .then((res) => popupCardItem.close())
-    .catch((err) => {
-      console.log(`Добавление новой карточки привело к ошибке ${err}`);
-    })
-    .finally(() => { popupCardItem.returnDefaultTextBtn() });
 }
 
 //функция обновления аватара профиля

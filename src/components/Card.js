@@ -24,7 +24,7 @@ export class Card {
       this._likeCountElement.classList.add('element__like-count_opened');
 
       this._likes.forEach((like) => {
-        if ((like._id === this._profileId) && !(this._likeBtn.classList.contains('.element__like-btn_active'))) {
+        if ((like._id === this._profileId) && !(this._likeBtn.classList.contains('element__like-btn_active'))) {
           this._likeBtn.classList.add('element__like-btn_active');
         }
       });
@@ -41,11 +41,12 @@ export class Card {
   }
 
   _changeLike(likeButton) {
-    likeButton.classList.toggle('element__like-btn_active');
     if (likeButton.classList.contains('element__like-btn_active')) {
-      this._addLikeClick(this);
+      this._deleteLikeClick(this)
+        .then((res) => likeButton.classList.remove('element__like-btn_active'));
     } else {
-      this._deleteLikeClick(this);
+      this._addLikeClick(this)
+        .then((res) => likeButton.classList.add('element__like-btn_active'));
     }
   };
 
